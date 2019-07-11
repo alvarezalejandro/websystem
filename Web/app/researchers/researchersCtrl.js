@@ -306,7 +306,7 @@ angular.module('Researchers')
         };
         $scope.exportCSVFile = function (headers, items, fileTitle) {
             console.log("Entro a exportar");
-            var headers = {
+            /*var headers = {
                 model: 'Phone Model'.replace(/,/g, ''), // remove commas to avoid errors
                 chargers: "Chargers",
                 cases: "Cases",
@@ -343,14 +343,24 @@ angular.module('Researchers')
                     cases: item.cases,
                     earphones: item.earphones
                 });
+            });*/
+            var itemsFormatted = [];
+            items.forEach((item) => {
+                itemsFormatted.push({
+                    name : item.name,
+                    surname : item.surname,
+                    gender : item.gender === 'male' ? 'hombre' : 'mujer',
+                    titulo : item.titulo,
+                    areaDeFormacion : item.areaDeFormacion
+                });
             });
-            var items = convertToCSV(itemsNotFormatted);
+            //var items = convertToCSV(itemsNotFormatted);
             /*if (headers) {
                 items.unshift(headers);
             }*/
         
             // Convert Object to JSON
-            var jsonObject = JSON.stringify(items);
+            var jsonObject = JSON.stringify(itemsFormatted);
         
             var csv = convertToCSV(jsonObject);
         
