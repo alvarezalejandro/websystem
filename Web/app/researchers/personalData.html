@@ -6,6 +6,7 @@
                         <span class="md-headline">{{researcherEditing.name}} {{researcherEditing.surname}}</span>
                         <span class="md-subhead">{{researcherEditing.dni}}</span>
                         <span class="md-subhead">{{researcherEditing.email}}</span>
+                        <span class="md-subhead">{{age}}</span>
                     </md-card-title-text>
                     <md-card-title-media>
                         <div class="md-media-lg card-media">
@@ -60,17 +61,17 @@
                     </div>
                 </md-input-container>
                 <md-input-container flex="20">
-                    <label>Fecha de Nacimiento</label>
-                    <input type="date" ng-model="researcherEditing.birthday" ng-disabled="readOnlyMode">
+                    <label>Fecha de Nacimiento {{age}}</label>
+                    <input type="date" ng-model="researcherEditing.birthday" ng-change="refreshAge()" ng-disabled="readOnlyMode">
                 </md-input-container>
             </div>
             <div layout="row">
                 <md-input-container flex="12">
                     <label>Cuil/Cuit</label>
-                    <input required="" ng-pattern="cuilRegExpr" ng-disabled="readOnlyMode" placeholder="##-########-#" name="cuilCuit" ng-model="researcherEditing.cuilCuit">
+                    <input required="" ng-pattern="cuilRegExpr" ng-disabled="readOnlyMode" placeholder="###########" name="cuilCuit" ng-model="researcherEditing.cuilCuit">
                     <div ng-messages="researcherForm.cuilCuit.$error">
                         <div ng-message="required">Campo requerido.</div>
-                        <div ng-message="pattern">Formato esperado: ##-########-#.</div>
+                        <div ng-message="pattern">Formato esperado: ###########.</div>
                     </div>
                 </md-input-container>
                 <md-input-container flex="30">

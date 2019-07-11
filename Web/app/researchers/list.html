@@ -16,6 +16,9 @@
             <img ng-show="researchers" src="../assets/img/LUPA-128.png" class="inputImage">
             <md-button class="buttonResearcher md-raised md-primary" ui-sref="researchers.new">Agregar nuevo</md-button>
         </div>
+        <div layout="row">
+            <md-button ng-show=" !readOnlyMode" class="md-raised md-primary" ng-click="exportCSVFile('','','investigadores')">Descargar Investigadores</md-button>
+        </div>
         <div class="scrollable">
             <table ng-show="researchers!=null">
                 <tr>

@@ -5,6 +5,7 @@ angular.module('Researchers')
         function ($scope, $stateParams, researcherService, parametricService) {
             $scope.setup = function () {
                 $scope.isAddingANewResearcher = isAddingANewResearcher();
+                $scope.age = '';
                 if (isAddingANewResearcher()) {
                     $scope.researcherEditing = {
                         id: null,
@@ -16,7 +17,7 @@ angular.module('Researchers')
                     researcherService.getResearcher($stateParams.id, setResearchersToEdit);
                 }
                 $scope.researcherSaved = false;
-                $scope.cuilRegExpr = '^\\d{2}-\\d{8}-\\d{1}$';
+                $scope.cuilRegExpr = '^\\d{2}\\d{8}\\d{1}$';
                 loadParametrics();
             }
             $scope.save = function () {
@@ -44,6 +45,15 @@ angular.module('Researchers')
                 $scope.setup();
             };
 
+            $scope.refreshAge = function(){
+                var today = new Date(Date.now());
+                $scope.age ='';
+                if($scope.researcherEditing.birthday){
+                    var age = today.getFullYear() - $scope.researcherEditing.birthday.getFullYear();
+                    $scope.age = age+" años";
+                }
+            }
+
             var onResearcherSaved = function () {
                 $scope.researcherSaved = true;
                 if(isAddingANewResearcher())
@@ -61,6 +71,7 @@ angular.module('Researchers')
                 if (typeof $scope.researcherEditing.birthday === 'string') {
                     $scope.researcherEditing.birthday = new Date($scope.researcherEditing.birthday);
                 }
+                $scope.refreshAge();
             }
 
             var loadParametrics = function () {
@@ -293,7 +304,76 @@ angular.module('Researchers')
         $scope.setPage = function(index) {
             $scope.currentPage = index - 1;
         };
-
+        $scope.exportCSVFile = function (headers, items, fileTitle) {
+            console.log("Entro a exportar");
+            var headers = {
+                model: 'Phone Model'.replace(/,/g, ''), // remove commas to avoid errors
+                chargers: "Chargers",
+                cases: "Cases",
+                earphones: "Earphones"
+            };
+            var itemsNotFormatted = [
+                {
+                    model: 'Samsung S7',
+                    chargers: '55',
+                    cases: '56',
+                    earphones: '57',
+                    scratched: '2'
+                },
+                {
+                    model: 'Pixel XL',
+                    chargers: '77',
+                    cases: '78',
+                    earphones: '79',
+                    scratched: '4'
+                },
+                {
+                    model: 'iPhone 7',
+                    chargers: '88',
+                    cases: '89',
+                    earphones: '90',
+                    scratched: '6'
+                }
+            ];
+            var itemsFormatted = [];
+            itemsNotFormatted.forEach((item) => {
+                itemsFormatted.push({
+                    model: item.model.replace(/,/g, ''), // remove commas to avoid errors,
+                    chargers: item.chargers,
+                    cases: item.cases,
+                    earphones: item.earphones
+                });
+            });
+            var items = convertToCSV(itemsNotFormatted);
+            /*if (headers) {
+                items.unshift(headers);
+            }*/
+        
+            // Convert Object to JSON
+            var jsonObject = JSON.stringify(items);
+        
+            var csv = convertToCSV(jsonObject);
+        
+            var exportedFilenmae = fileTitle + '.csv' || 'export.csv';
+        
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            if (navigator.msSaveBlob) { // IE 10+
+                navigator.msSaveBlob(blob, exportedFilenmae);
+            } else {
+                var link = document.createElement("a");
+                if (link.download !== undefined) { // feature detection
+                    // Browsers that support HTML5 download attribute
+                    var url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", exportedFilenmae);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        };
+        //Termina la magia
         var loadResearchers = function () {
             researcherService.getResearchers(refreshResearchers);
         },
@@ -318,6 +398,24 @@ angular.module('Researchers')
             $scope.parametrics = parametrics;
             $scope.positionTypes = parametrics.positionType;
         },
+        //Empieza la magia
+        convertToCSV = function (objArray) {
+            var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+            var str = '';
+        
+            for (var i = 0; i < array.length; i++) {
+                var line = '';
+                for (var index in array[i]) {
+                    if (line != '') line += ','
+        
+                    line += array[i][index];
+                }
+        
+                str += line + '\r\n';
+            }
+        
+            return str;
+        },        
         configPages = function(items) {
             $scope.pages.length = 0;
             var ini = $scope.currentPage - 4;

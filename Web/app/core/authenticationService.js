@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('Core').factory('authenticationService', ['$http', '$cookieStore', '$rootScope', '$timeout', 'userService',
-    function ($http, $cookieStore, $rootScope, $timeout, userService) {
+angular.module('Core').factory('authenticationService', ['$http', '$cookies', '$rootScope', '$timeout', 'userService',
+    function ($http, $cookies, $rootScope, $timeout, userService) {
         return {
             login: function (username, password, onSuccess, onError) {
                 $timeout(function () {
@@ -19,11 +19,11 @@ angular.module('Core').factory('authenticationService', ['$http', '$cookieStore'
                     }
                 };
                 $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata; // jshint ignore:line
-                $cookieStore.put('globals', $rootScope.globals);
+                $cookies.put('globals', $rootScope.globals);
             },
             clearCredentials: function () {
                 $rootScope.globals = {};
-                $cookieStore.remove('globals');
+                $cookies.remove('globals');
                 $http.defaults.headers.common.Authorization = 'Basic';
             },
             logout: function () {
