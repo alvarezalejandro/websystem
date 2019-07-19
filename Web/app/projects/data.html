@@ -1,6 +1,13 @@
 <div>
     <div layout="row">
         <md-input-container flex="20">
+            <label>ID Proyecto</label>
+            <input required="" name="projectID" ng-disabled="readOnlyMode" ng-model="projectEditing.ID">
+            <div ng-messages="researcherForm.projectID.$error">
+                <div ng-message="required">Campo requerido.</div>
+            </div>
+        </md-input-container>
+        <md-input-container flex="20">
             <label>Nombre de Proyecto</label>
             <input required="" name="projectName" ng-disabled="readOnlyMode" ng-model="projectEditing.projectName">
             <div ng-messages="researcherForm.projectName.$error">
@@ -52,10 +59,10 @@
         </md-input-container>
         <md-input-container>
             <label>Tipo de Investigación</label>
-            <md-select ng-model="projectEditing.investigactionType" placeholder="Tipo de Investigación">
+            <md-select ng-model="projectEditing.tipoDeInvestigacion" placeholder="Tipo de Investigación">
                 <md-option><em>Ninguno</em></md-option>
-                <md-option value="{{investigactionType.id}}" ng-repeat="investigactionType in  parametrics['investigactionType']">
-                    {{  investigactionType.name }}
+                <md-option value="{{tipoDeInvestigacion.id}}" ng-repeat="tipoDeInvestigacion in  parametrics['tipoDeInvestigacion']">
+                    {{  tipoDeInvestigacion.name }}
                 </md-option>
             </md-select>
         </md-input-container>
@@ -100,6 +107,16 @@
                 </md-option>
             </md-select>
         </md-input-container>
+    </div>
+    <div layout="row">
+        <md-input-container flex="15">
+            <label>Fecha de alta del proyecto</label>
+                <input type="date" ng-model="projectEditing.fechaDeAlta" ng-disabled="readOnlyMode">
+        </md-input-container>
+        <md-input-container flex="15">
+                <label>Fecha de baja del proyecto</label>
+                    <input type="date" ng-model="projectEditing.fechaDeBaja" ng-disabled="readOnlyMode">
+            </md-input-container>
     </div>
 </div>
 

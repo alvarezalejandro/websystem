@@ -40,6 +40,15 @@ angular.module('Projects')
         function ($scope) {
             $scope.setup = function()
             {
+            };
+            $scope.proyectoActivo = function(proyecto) {
+                var today = new Date(Date.now());
+                if(proyecto.fechaDeBaja != null || new Date(proyecto.fechaDeBaja) <= today){
+                    return false;
+                }
+                else{
+                    return true;
+                }
             }
         }
     ]);
@@ -72,6 +81,12 @@ angular.module('Projects')
                 $scope.reports = ['Aprobado', 'En Observación', 'Desaprobado'];
             };
             $scope.save = function () {
+                if (typeof $scope.fechaDeAlta !== 'string') {
+                    $scope.projectEditing.fechaDeAlta = $scope.projectEditing.fechaDeAlta.toJSON();
+                }
+                if (typeof $scope.fechaDeBaja !== 'string') {
+                    $scope.projectEditing.fechaDeBaja = $scope.projectEditing.fechaDeBaja.toJSON();
+                }
                 $scope.projectSaved  = false;
                 projectService.save($stateParams.idConvocatory, $scope.projectEditing, onProjectSaved);
             };
@@ -92,6 +107,12 @@ angular.module('Projects')
                 return $stateParams.idProject == undefined;
                 },
                 setProjectsToEdit = function (project) {
+                    if (typeof project.fechaDeAlta === 'string') {
+                        project.fechaDeAlta = new Date(project.fechaDeAlta);
+                    }
+                    if (typeof project.fechaDeBaja === 'string') {
+                        project.fechaDeBaja = new Date(project.fechaDeBaja);
+                    }
                     $scope.projectEditing = project;
                 },
                 onProjectSaved = function () {

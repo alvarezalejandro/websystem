@@ -1,42 +1,34 @@
 <div ng-init="setup()">
     <div layout="row"  ng-show=" !readOnlyMode">
         <md-input-container>
-            <label>Universidad</label>
-            <md-select ng-model="formationEditing.university" placeholder="Universidad">
-                <md-option  value="{{university.id}}" ng-repeat="university in parametrics['university']" >
-                    {{university.name}}
-                </md-option>
-            </md-select>
-        </md-input-container>
-        <md-input-container>
             <label>Tipo de Formación</label>
-            <md-select ng-model="formationEditing.type" placeholder="Tipo de Formación">
-                <md-option  value="{{formationType}}" ng-repeat="formationType in formationTypes" >
-                    {{formationType}}
+            <md-select ng-model="formationEditing.tipoDeFormacion" ng-change=tipoDeFormacionChanged() placeholder="Tipo de Formación">
+                <md-option  value="{{tipoDeFormacion.id}}" ng-repeat="tipoDeFormacion in parametrics['tipoDeFormacion']" >
+                    {{tipoDeFormacion.name}}
                 </md-option>
             </md-select>
         </md-input-container>
         <md-input-container>
             <label>Grado de Titulación</label>
-            <md-select ng-model="formationEditing.academicDegree" placeholder="Grado de Titulación">
-                <md-option value="{{academicDegree.id}}" ng-repeat="academicDegree in parametrics['academicDegree']">
-                    {{ academicDegree.name }}
+            <md-select ng-model="formationEditing.gradoDeTitulacion" placeholder="Grado de Titulación">
+                <md-option value="{{grado.id}}" ng-repeat="grado in parametrics['tipoDeFormacion'][formationEditing.tipoDeFormacion].gradoDeTitulacion">
+                    {{ grado.name }}
                 </md-option>
             </md-select>
         </md-input-container>
     </div>
     <div layout="row"  ng-show=" !readOnlyMode">
         <md-input-container>
-            <label>Gran Area de Conocimiento</label>
-            <md-select ng-model="formationEditing.degreeArea"  ng-change="degreeAreaChanged()" placeholder="Gran Area de Conocimiento">
+            <label>Area de Formación</label>
+            <md-select ng-model="formationEditing.degreeArea"  ng-change="degreeAreaChanged()" placeholder="Area de Formación">
                 <md-option value="{{degreeArea.id}}" ng-repeat="degreeArea in parametrics['degreeArea']">
                     {{ degreeArea.name }}
                 </md-option>
             </md-select>
         </md-input-container>
         <md-input-container>
-            <label>Carrera</label>
-            <md-select ng-model="formationEditing.career" placeholder="Carrera">
+            <label>Disciplina</label>
+            <md-select ng-model="formationEditing.career" placeholder="Disciplina">
                 <md-option value="{{career.id}}" ng-repeat="career in parametrics['degreeArea'][formationEditing.degreeArea].careers">
                     {{ career.name }}
                 </md-option>
@@ -82,7 +74,7 @@
             <input name="otra" ng-model="formationEditing.otherScholarship">
         </md-input-container>
     </div>
-    <md-button class="md-raised md-primary" ng-show=" !readOnlyMode" ng-disabled="formationEditing.type==null || formationEditing.degreeArea==null || formationEditing.academicDegree==null ||  formationEditing.formationCompleted==null" ng-click="addNewFormation()">
+    <md-button class="md-raised md-primary" ng-show=" !readOnlyMode" ng-disabled="formationEditing.tipoDeFormacion==null || formationEditing.gradoDeTitulacion==null ||  formationEditing.formationCompleted==null" ng-click="addNewFormation()">
         {{formationEditingExisting ? 'Actualizar Formación' : 'Agregar Nueva Formación'}}
     </md-button>
     <md-button ng-show="formationEditingExisting" class="md-raised md-primary" ng-click="cancelEdition()">Cancelar</md-button>
@@ -109,8 +101,8 @@
                     <th></th>
                 </tr>
                 <tr ng-repeat="formation in researcherEditing.formations">
-                    <td>{{formation.type}}</td>
-                    <td>{{parametrics['academicDegree'][formation.academicDegree].name}}</td>
+                    <td>{{parametrics['tipoDeFormacion'][formation.tipoDeFormacion].name}}</td>
+                    <td>{{parametrics['tipoDeFormacion'][formation.tipoDeFormacion].gradoDeTitulacion[formation.gradoDeTitulacion].name}}</td>
                     <td>{{parametrics['degreeArea'][formation.degreeArea].name}}</td>
                     <td>{{parametrics['degreeArea'][formation.degreeArea].careers[formation.career].name}}</td>
                     <td>

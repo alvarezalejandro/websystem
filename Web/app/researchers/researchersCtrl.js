@@ -141,7 +141,6 @@ angular.module('Researchers')
             $scope.setup = function()
             {
                 $scope.formationSaved = false;
-                $scope.formationTypes = ["Grado","Posgrado"];
                 $scope.studiesStates = [{name:'En curso', value:false},{name:'Terminado', value:true}];
                 $scope.categorizationUniversities=["I","II","III","IV","V"];
                 $scope.formationEditing = {id: null};
@@ -165,6 +164,9 @@ angular.module('Researchers')
             }
             $scope.degreeAreaChanged = function () {
                 $scope.formationEditing.career = null;
+            }
+            $scope.tipoDeFormacionChanged = function () {
+                $scope.formationEditing.gradoDeTitulacion = null
             }
             var onFormationUpdated = function () {
                     $scope.formationSaved = true;
@@ -305,45 +307,6 @@ angular.module('Researchers')
             $scope.currentPage = index - 1;
         };
         $scope.exportCSVFile = function (headers, items, fileTitle) {
-            console.log("Entro a exportar");
-            /*var headers = {
-                model: 'Phone Model'.replace(/,/g, ''), // remove commas to avoid errors
-                chargers: "Chargers",
-                cases: "Cases",
-                earphones: "Earphones"
-            };
-            var itemsNotFormatted = [
-                {
-                    model: 'Samsung S7',
-                    chargers: '55',
-                    cases: '56',
-                    earphones: '57',
-                    scratched: '2'
-                },
-                {
-                    model: 'Pixel XL',
-                    chargers: '77',
-                    cases: '78',
-                    earphones: '79',
-                    scratched: '4'
-                },
-                {
-                    model: 'iPhone 7',
-                    chargers: '88',
-                    cases: '89',
-                    earphones: '90',
-                    scratched: '6'
-                }
-            ];
-            var itemsFormatted = [];
-            itemsNotFormatted.forEach((item) => {
-                itemsFormatted.push({
-                    model: item.model.replace(/,/g, ''), // remove commas to avoid errors,
-                    chargers: item.chargers,
-                    cases: item.cases,
-                    earphones: item.earphones
-                });
-            });*/
             var itemsFormatted = [];
             items.forEach((item) => {
                 itemsFormatted.push({
@@ -354,28 +317,23 @@ angular.module('Researchers')
                     areaDeFormacion : item.areaDeFormacion
                 });
             });
-            //var items = convertToCSV(itemsNotFormatted);
-            /*if (headers) {
-                items.unshift(headers);
-            }*/
-        
-            // Convert Object to JSON
+
             var jsonObject = JSON.stringify(itemsFormatted);
         
             var csv = convertToCSV(jsonObject);
         
-            var exportedFilenmae = fileTitle + '.csv' || 'export.csv';
+            var exportedFilename = fileTitle + '.csv' || 'export.csv';
         
             var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             if (navigator.msSaveBlob) { // IE 10+
-                navigator.msSaveBlob(blob, exportedFilenmae);
+                navigator.msSaveBlob(blob, exportedFilename);
             } else {
                 var link = document.createElement("a");
                 if (link.download !== undefined) { // feature detection
                     // Browsers that support HTML5 download attribute
                     var url = URL.createObjectURL(blob);
                     link.setAttribute("href", url);
-                    link.setAttribute("download", exportedFilenmae);
+                    link.setAttribute("download", exportedFilename);
                     link.style.visibility = 'hidden';
                     document.body.appendChild(link);
                     link.click();
@@ -383,7 +341,6 @@ angular.module('Researchers')
                 }
             }
         };
-        //Termina la magia
         var loadResearchers = function () {
             researcherService.getResearchers(refreshResearchers);
         },
@@ -408,7 +365,6 @@ angular.module('Researchers')
             $scope.parametrics = parametrics;
             $scope.positionTypes = parametrics.positionType;
         },
-        //Empieza la magia
         convertToCSV = function (objArray) {
             var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
             var str = '';

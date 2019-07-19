@@ -17,6 +17,7 @@
                 <tr>
                     <th>Nombre de Proyecto</th>
                     <th>Secretaria/Departamento</th>
+                    <th>Activo</th>
                     <th></th>
                 </tr>
                 <tr ng-repeat="project in convocatories[convocatorySelected].projects">
@@ -24,6 +25,7 @@
                         {{project.projectName}}
                     </td>
                     <td>{{parametrics['secretaryshipDepartment'][project.firstSecretaryshipDepartment].name}} <div ng-if="project.secondSecretaryshipDepartment">{{" / "+parametrics['secretaryshipDepartment'][project.secondSecretaryshipDepartment].name}}</div></td>
+                    <td >{{proyectoActivo(project) ? "SI" : "NO"}}</td>
                     <td ng-if="!convocatory.endDate"></td>
                     <td>
                         <md-button class="md-raised md-primary" ui-sref="projects.edit({idConvocatory:convocatorySelected, idProject:project.id})">Editar</md-button>

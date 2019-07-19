@@ -12,6 +12,7 @@ angular.module('Parametrics')
                 $scope.secretaryshipDepartmentSelected=null;
                 $scope.degreeAreaSelected=null;
                 $scope.undavCareerSelected=null;
+                $scope.tipoDeFormacionSelected=null;
                 $scope.parametricsSelectedToEditReady = false;
                 parametricService.getParametrics(refreshParametrics);
             }
@@ -50,6 +51,22 @@ angular.module('Parametrics')
                 }
             }
 
+            $scope.tipoDeFormacionChanged = function(){
+                if($scope.parametricTypeSelected == 'gradoDeTitulacion')
+                {
+                    $scope.parametricsSelectedToEdit = $scope.parametrics['tipoDeFormacion'][$scope.tipoDeFormacionSelected].gradoDeTitulacion;
+                    $scope.parametricsSelectedToEditReady = true;
+                }
+            }
+
+            $scope.organismoDeCategorizacionChanged = function(){
+                if($scope.parametricTypeSelected == 'categoria')
+                {
+                    $scope.parametricsSelectedToEdit = $scope.parametrics['organismoDeCategorizacion'][$scope.organismoDeCategorizacionSelected].categoria;
+                    $scope.parametricsSelectedToEditReady = true;
+                }
+            }
+
             $scope.getParametricPathReference = function(){
                 var pathReference = $scope.parametricTypeSelected;
                 if($scope.parametricTypeSelected == 'undavCareer')
@@ -63,6 +80,14 @@ angular.module('Parametrics')
                 if($scope.parametricTypeSelected == 'career')
                 {
                     pathReference = 'degreeArea/'+$scope.degreeAreaSelected+'/careers';
+                }
+                if($scope.parametricTypeSelected == 'gradoDeTitulacion')
+                {
+                    pathReference = 'tipoDeFormacion/'+$scope.tipoDeFormacionSelected+'/gradoDeTitulacion';
+                }
+                if($scope.parametricTypeSelected == 'categoria')
+                {
+                    pathReference = 'organismoDeCategorizacion/'+$scope.organismoDeCategorizacionSelected+'/categoria';
                 }
                 return pathReference;
             }
@@ -89,6 +114,18 @@ angular.module('Parametrics')
                     flag = false;
                 }
 
+                if($scope.parametricTypeSelected == 'gradoDeTitulacion' && $scope.tipoDeFormacionSelected != null)
+                {
+                    $scope.parametricsSelectedToEdit = $scope.parametrics['tipoDeFormacion'][$scope.tipoDeFormacionSelected].gradoDeTitulacion;
+                    flag = false;
+                }
+
+                if($scope.parametricTypeSelected == 'categoria' && $scope.organismoDeCategorizacionSelected != null)
+                {
+                    $scope.parametricsSelectedToEdit = $scope.parametrics['organismoDeCategorizacion'][$scope.organismoDeCategorizacionSelected].categoria;
+                    flag = false;
+                }
+
                 if(flag && $scope.parametricTypeSelected !=null)
                 {
                     $scope.parametricsSelectedToEdit = isNullOrUndefined($scope.parametrics) ? {} : $scope.parametrics[$scope.parametricTypeSelected];
@@ -104,7 +141,7 @@ angular.module('Parametrics')
 
             var setSelectedParametricsToListAndEdit = function()
             {
-                if ($scope.parametricTypeSelected == null || $scope.parametricTypeSelected == 'undavCareer' || $scope.parametricTypeSelected == 'subject' || $scope.parametricTypeSelected == 'career')
+                if ($scope.parametricTypeSelected == null || $scope.parametricTypeSelected == 'undavCareer' || $scope.parametricTypeSelected == 'subject' || $scope.parametricTypeSelected == 'career' || $scope.parametricTypeSelected == 'gradoDeTitulacion' || $scope.parametricTypeSelected == 'categoria')
                 {
                     $scope.parametricsSelectedToEdit = {};
                     $scope.parametricsSelectedToEditReady = false;
@@ -144,7 +181,14 @@ angular.module('Parametrics')
                 }
                 if(parametricType == 'subject'){
                     setIsNewParametric($scope.parametrics['secretaryshipDepartment'][$scope.secretaryshipDepartmentSelected].careers[$scope.undavCareerSelected].subjects);
-                }else{
+                }
+                if(parametricType == 'gradoDeTitulacion'){
+                    setIsNewParametric($scope.parametrics['tipoDeFormacion'][$scope.tipoDeFormacionSelected].gradoDeTitulacion);
+                }
+                if(parametricType == 'categoria'){
+                    setIsNewParametric($scope.parametrics['organismoDeCategorizacion'][$scope.organismoDeCategorizacionSelected].categoria);
+                }
+                else{
                     setIsNewParametric($scope.parametrics[parametricType]);
                 }
             }
@@ -289,6 +333,14 @@ angular.module('Parametrics')
                     if(parametricTypeSelected == 'career')
                     {
                         return 'degreeArea/'+$scope.degreeAreaSelected+'/careers';
+                    }
+                    if(parametricTypeSelected == 'gradoDeTitulacion')
+                    {
+                        return 'tipoDeFormacion/'+$scope.tipoDeFormacionSelected+'/gradoDeTitulacion';
+                    }
+                    if(parametricTypeSelected == 'categoria')
+                    {
+                        return 'organismoDeCategorizacion/'+$scope.organismoDeCategorizacionSelected+'/categoria';
                     }
 
                     return  parametricTypeSelected;

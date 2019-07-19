@@ -33,6 +33,20 @@
                         </md-select>
                     </md-input-container>
                 </div>
+                <div layout="row" ng-show="parametricTypeSelected == 'gradoDeTitulacion'">
+                    <md-input-container>
+                        <md-select ng-model="tipoDeFormacionSelected" ng-change="tipoDeFormacionChanged()" placeholder="Tipo de Formación">
+                            <md-option ng-repeat="tipoDeFormacion in  parametrics['tipoDeFormacion'] | toArray" value="{{tipoDeFormacion.id}}">{{  tipoDeFormacion.name }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout="row" ng-show="parametricTypeSelected == 'categoria'">
+                        <md-input-container>
+                            <md-select ng-model="organismoDeCategorizacionSelected" ng-change="organismoDeCategorizacionChanged()" placeholder="Organismo de Categorización">
+                                <md-option ng-repeat="organismoDeCategorizacion in  parametrics['organismoDeCategorizacion'] | toArray" value="{{organismoDeCategorizacion.id}}">{{  organismoDeCategorizacion.name }}</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
                 <div ng-show="parametricsSelectedToEditReady">
                     <md-divider ng-if="parametricTypeSelected"></md-divider>
                     <div ng-show="parametricTypeSelected != null">
@@ -40,6 +54,8 @@
                         <h4 ng-show="parametricTypeSelected == 'undavCareer' && secretaryshipDepartmentSelected != null">{{parametricTypes[parametricTypeSelected].listTitle + ' en ' + parametrics['secretaryshipDepartment'][secretaryshipDepartmentSelected].name}}</h4>
                         <h4 ng-show="parametricTypeSelected == 'career'">{{parametricTypes[parametricTypeSelected].listTitle + ' en ' + parametrics['degreeArea'][degreeAreaSelected].name}}</h4>
                         <h4 ng-show="parametricTypeSelected == 'subject' && undavCareerSelected != null">{{parametricTypes[parametricTypeSelected].listTitle + ' en ' + parametrics['secretaryshipDepartment'][secretaryshipDepartmentSelected].careers[undavCareerSelected].name}}</h4>
+                        <h4 ng-show="parametricTypeSelected == 'gradoDeTitulacion'">{{parametricTypes[parametricTypeSelected].listTitle + ' en ' + parametrics['tipoDeFormacion'][tipoDeFormacionSelected].name}}</h4>
+                        <h4 ng-show="parametricTypeSelected == 'categoria'">{{parametricTypes[parametricTypeSelected].listTitle + ' en ' + parametrics['organismoDeCategorizacion'][organismoDeCategorizacionSelected].name}}</h4>
                         <div ng-include src="'parametrics/editInLine.html'" ng-controller="parametrics.editInLine" ></div>
                     </div>
                     <md-divider ng-if="parametricTypeSelected"></md-divider>

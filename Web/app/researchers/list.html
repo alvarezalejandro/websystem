@@ -35,8 +35,7 @@
                                 <img ng-show="researcher.profilePhoto==null && researcher.gender == 'male'" ng-src="../assets/img/profile-male.png" class="md-avatar">
                                 <img ng-show="researcher.profilePhoto==null && researcher.gender == 'female'" ng-src="../assets/img/profile-female.png" class="md-avatar">
                                 <div class="md-list-item-text">
-                                    <h3>{{researcher.surname}}</h3>
-                                    <h4>{{researcher.name}}</h4>
+                                    <h3>{{researcher.surname}} {{researcher.name}}</h3>
                                     <h5>{{'DNI '+researcher.dni}}</h5>
                                     <h5>{{researcher.email}}</h5>
                                 </div>
@@ -48,24 +47,10 @@
                         <md-list>
                             <md-list-item class="md-3-line" ng-repeat="formation in researcher.formations | toArray">
                                 <div class="md-list-item-text">
-                                    <h3>{{formation.type}}</h3>
-                                    <h3>{{parametrics['degreeArea'][formation.degreeArea].careers[formation.career].name}}</h3>
+                                    <h3>{{parametrics['academicDegree'][formation.academicDegree].name}} - {{parametrics['degreeArea'][formation.degreeArea].careers[formation.career].name}}</h3>
                                 </div>
                                 <md-divider md-inset ng-if="!$last"></md-divider>
                             </md-list-item>
-                        </md-list>
-                    </td>
-                    <td>
-                        <label ng-show="(researcher.positions|toArray).length == 0 ">No hay cargos cargados</label>
-                        <md-list>
-                            <md-list-item class="md-3-line" ng-repeat="position in researcher.positions | toArray">
-                                <div class="md-list-item-text">
-                                    <h3>{{positionTypes[position.positionType].name}}</h3>
-                                    <h4>{{parametrics['secretaryshipDepartment'][position.secretaryshipDepartment].careers[position.career].subjects[position.subject].name}}</h4>
-                                    <h5>{{parametrics['secretaryshipDepartment'][position.secretaryshipDepartment].careers[position.career].name}}</h5>
-                                    <h6>{{parametrics['secretaryshipDepartment'][position.secretaryshipDepartment].name}}</h6>
-                                </div>
-                                <md-divider md-inset ng-if="!$last"></md-divider>
                         </md-list>
                     </td>
                     <td>
