@@ -1,6 +1,47 @@
-<div>
+<div ng-controller=projects.list ng-init=setup()> 
     <div layout="row">
-        <md-button class="md-raised md-primary" ui-sref="projects.new({idConvocatory:convocatorySelected})">Agregar nuevo</md-button>
+        <md-input-container>
+            <md-select ng-model="convocatorySelected" ng-change="changeConvocatoriesToEdit()" placeholder="Elije una Convocatoria">
+                <md-option ng-repeat="convocatory in  convocatories | toArray" value="{{convocatory.id}}">{{  convocatory.type }}</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <div layout="row">
+        <md-input-container class="md-icon-float md-block" flex="30" ng-show="convocatorySelected">
+            <label> Buscar Proyectos... </label>
+            <input ng-model="searchText" ng-change="search()" >
+        </md-input-container>
+        <img ng-show="convocatorySelected" src="../assets/img/LUPA-128.png" class="inputImage">
+    </div>
+    <div layout="row">
+        <div layout="column" ng-show="convocatorySelected">
+            <!--<md-checkbox aria-label="Select All" ng-checked="isCheckedSecretarias()" ng-click="toggleAllSecretarias()">
+                <span ng-if="isCheckedSecretarias()">Des-</span>Seleccionar todos
+            </md-checkbox>-->
+            <div>Departamentos</div>
+            <div flex="100" ng-show ="convocatorySelected" ng-repeat="departamento in parametrics['secretaryshipDepartment']">
+                <md-checkbox ng-checked="exists(departamento, secretariasSeleccionadas)" ng-click="toggle(departamento, secretariasSeleccionadas);search()">{{ departamento.name }}</md-checkbox>
+            </div>
+        </div>
+        <div layout="column" style="padding-left: 30px" ng-show="convocatorySelected">
+            <!--<md-checkbox aria-label="Select All" ng-checked="isCheckedAreas()" ng-click="toggleAllAreas()">
+                <span ng-if="isCheckedAreas()">Des-</span>Seleccionar todos
+            </md-checkbox>-->
+            <div>Areas</div>
+            <div flex="100" ng-show ="convocatorySelected" ng-repeat="area in parametrics['degreeArea']">
+                <md-checkbox ng-checked="exists(area, areasSeleccionadas)" ng-click="toggle(area, areasSeleccionadas);search()">{{ area.name }}</md-checkbox>
+            </div>
+        </div>
+        <div layout="column" style="padding-left: 30px" ng-show="convocatorySelected">
+            <div>Financiado</div>
+            <div flex="100" ng-show ="convocatorySelected" ng-repeat="financiado in financiadoBinario">
+                <md-checkbox ng-checked="exists(financiado, financiadosSeleccionados)" ng-click="toggle(financiado, financiadosSeleccionados);search()">{{ financiado }}</md-checkbox>
+            </div>
+            <div>Activo</div>
+            <div flex="100" ng-show ="convocatorySelected" ng-repeat="activo in activoBinario">
+                <md-checkbox ng-checked="exists(activo, activosSeleccionados)" ng-click="toggle(activo, activosSeleccionados);search()">{{ activo }}</md-checkbox>
+            </div>
+        </div>
     </div>
     <div layout="row" ng-show="projects === undefined" layout-sm="column" layout-align="left">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -10,20 +51,18 @@
         <div ng-show="convocatorySelected != null">
             <h4>Proyectos disponibles</h4>
         </div>
-        <label ng-show="(projects | toArray).length == 0">No hay Proyectos.</label>
+        <label ng-show="(convocatorySelected && (filteredProjects | toArray).length == 0)">No hay Proyectos.</label>
 
         <div class="scrollable">
-            <table ng-show="convocatories!=null">
+            <table ng-show="convocatorySelected!=null">
                 <tr>
                     <th>Nombre de Proyecto</th>
                     <th>Secretaria/Departamento</th>
                     <th>Activo</th>
                     <th></th>
                 </tr>
-                <tr ng-repeat="project in convocatories[convocatorySelected].projects">
-                    <td>
-                        {{project.projectName}}
-                    </td>
+                <tr ng-repeat="project in filteredProjects">
+                    <td>{{project.projectName}}</td>
                     <td>{{parametrics['secretaryshipDepartment'][project.firstSecretaryshipDepartment].name}} <div ng-if="project.secondSecretaryshipDepartment">{{" / "+parametrics['secretaryshipDepartment'][project.secondSecretaryshipDepartment].name}}</div></td>
                     <td >{{proyectoActivo(project) ? "SI" : "NO"}}</td>
                     <td ng-if="!convocatory.endDate"></td>

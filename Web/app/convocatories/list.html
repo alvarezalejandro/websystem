@@ -1,5 +1,19 @@
-<div ng-init="setup()">
+<div ng-controller=convocatories.list ng-init="setup()">
     <div>
+        <div layout="row">
+            <md-input-container class="md-icon-float md-block" flex="30" ng-show="convocatories">
+                <label> Buscar Convocatorias... </label>
+                <input ng-model="searchText" ng-change="search()" >
+            </md-input-container>
+            <img ng-show="convocatories" src="../assets/img/LUPA-128.png" class="inputImage">
+        </div>
+        <div layout="row">
+                <md-input-container class="md-icon-float md-block" flex="30" ng-show="convocatories">
+                    <label> Buscar por año... </label>
+                    <input ng-model="searchYearText" ng-change="search()" >
+                </md-input-container>
+                <img ng-show="convocatories" src="../assets/img/LUPA-128.png" class="inputImage">
+            </div>
         <div layout="row">
             <md-button class="md-raised md-primary" ui-sref="convocatories.new">Agregar nuevo</md-button>
         </div>
@@ -13,19 +27,15 @@
             <table ng-show="convocatories!=null">
                 <tr>
                     <th>Nombre de Convocatoria</th>
-                    <th>AÑo</th>
+                    <th>Año</th>
                     <th>Evaluciones Externas</th>
                     <th>Fecha de Inicio</th>
                     <th>Fecha de Cierre</th>
                     <th></th>
                 </tr>
-                <tr ng-repeat="convocatory in convocatories">
-                    <td>
-                        {{convocatory.type}}
-                    </td>
-                    <td>
-                        {{convocatory.year}}
-                    </td>
+                <tr ng-repeat="convocatory in filteredConvocatories">
+                    <td>{{convocatory.type}}</td>
+                    <td>{{convocatory.year}}</td>
                     <td ng-if="convocatory.externalEvaluations=='true'">
                         {{"Si"}}
                     </td>

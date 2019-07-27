@@ -10,20 +10,54 @@ angular.module('Convocatories')
     ]);
 
 angular.module('Convocatories')
-    .controller('convocatories.list', ['$scope','convocatoryService',
-        function ($scope, convocatoryService) {
+    .controller('convocatories.list', ['$scope','$filter','convocatoryService',
+        function ($scope,$filter, convocatoryService) {
             $scope.setup = function()
             {
+                $scope.searchText = '';
+                $scope.searchYearText = '';
+                $scope.firstTime = true;
+                $scope.filteredConvocatories = [];
+                $scope.pages = [];
                 loadConvocatories();
+                $scope.currentPage = 0;
+                $scope.pageSize = 10;
+                $scope.search();
+            };
+            $scope.search = function()
+            {
+                var items = $filter('toArray')($scope.convocatories);
+                $scope.filteredConvocatories = $filter('filter')(items, $scope.searchText);
+                if(typeof $scope.searchText == 'string' && $scope.searchText != ''){
+                    $scope.filteredConvocatories = $filter('filter')($scope.filteredConvocatories, function(value) {return value.type.toLowerCase().includes($scope.searchText.toLowerCase())});
+                }
+                if(typeof $scope.searchYearText == 'string' && $scope.searchYearText != ''){
+                    $scope.filteredConvocatories = $filter('filter')($scope.filteredConvocatories, function(value) { return value.year== $scope.searchYearText});
+                }
+                if(items.length != $scope.filteredConvocatories.length)
+                {
+                    configPages($scope.filteredConvocatories);
+                }
             };
 
             var loadConvocatories = function () {
                 convocatoryService.getConvocatories(refreshConvocatories);
             },
                 refreshConvocatories = function (convocatories) {
-                    $scope.convocatories = convocatories;
-                    convertStringToDate();
-                    $scope.$apply();
+                    if(convocatories == null || Object.keys(convocatories).length==0){
+                        $scope.convocatories = null;
+                    }else{
+                        $scope.convocatories = convocatories;
+                        $scope.filteredConvocatories = $filter('toArray')(convocatories);
+                        convertStringToDate();
+                        configPages((Object.keys($scope.convocatories)));
+                    }
+                    if($scope.firstTime)
+                    {
+                        convertStringToDate();
+                        $scope.$apply();
+                        $scope.firstTime = false;
+                    }
                 },
                 convertStringToDate = function () {
                     for (var convocatory in $scope.convocatories) {
@@ -34,6 +68,34 @@ angular.module('Convocatories')
                             $scope.convocatories[convocatory].endDate = new Date($scope.convocatories[convocatory].endDate);
                         }
                     }
+                },
+                configPages = function(items) {
+                    $scope.pages.length = 0;
+                    var ini = $scope.currentPage - 4;
+                    var fin = $scope.currentPage + 5;
+                    if($scope.convocatories != null || $scope.convocatories != undefined){
+                        if (ini < 1) {
+                            ini = 1;
+                            if (Math.ceil(items.length / $scope.pageSize) > 10)
+                                fin = 10;
+                            else
+                                fin = Math.ceil(items.length  / $scope.pageSize);
+                        } else {
+                            if (ini >= Math.ceil(items.length  / $scope.pageSize) - 10) {
+                                ini = Math.ceil(items.length / $scope.pageSize) - 10;
+                                fin = Math.ceil(items.length  / $scope.pageSize);
+                            }
+                        }
+                        if (ini < 1) ini = 1;
+                        for (var i = ini; i <= fin; i++) {
+                            $scope.pages.push({
+                                no: i
+                            });
+                        }
+        
+                        if ($scope.currentPage >= $scope.pages.length)
+                            $scope.currentPage = $scope.pages.length - 1;
+                        }
                 };
             $scope.setup();
         }
