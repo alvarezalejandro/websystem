@@ -5,7 +5,7 @@ angular.module('Projects')
         function ($scope) {
             $scope.setup = function()
             {
-            };
+            }
         }
     ]);
 
@@ -298,7 +298,7 @@ angular.module('Projects')
                 projectService.agregarParticipante($stateParams.idConvocatory,$scope.projectEditing, $scope.participanteEditing, onParticipanteUpdated);
             };
             $scope.eliminarParticipante = function(participante){
-                projectService.eliminarParticipante($stateParams.idConvocatory,$scope.projectEditing, participante)
+                projectService.eliminarParticipante($stateParams.idConvocatory,$scope.projectEditing, participante);
             };
             $scope.editParticipante = function(participante)
             {

@@ -4,6 +4,7 @@
   "description": "SIISP",
   "main": "app.js",
   "dependencies": {
+    "@angular/cli": "^8.1.2",
     "bower": "^1.7.9",
     "firebase": "^3.1.0"
   },

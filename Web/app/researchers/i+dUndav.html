@@ -94,7 +94,7 @@
         positionEditingExisting ? 'Actualizar cargo' : 'Agregar nuevo cargo'}}</md-button>
     <md-button ng-show="positionEditingExisting" class="md-raised md-primary" ng-click="cancelEdition()">Cancelar</md-button>
     <label ng-show="positionSaved">Guardado!</label>
-    <md-divider ng-show="researcherEditing.positions!=null && !readOnlyMode""></md-divider>
+    <md-divider ng-show="researcherEditing.positions!=null && !readOnlyMode"></md-divider>
     <div ng-show="readOnlyMode">
         <label ng-show="(researcherEditing.positions|toArray).length == 0 ">No hay cargos cargados</label>
     </div>
@@ -132,7 +132,7 @@
                         <td ng-if="!position.terminationDate"></td>
                         <td></td>
                         <td ng-show=" !readOnlyMode">
-                            <md-button  class="md-raised md-primary"  ng-click="edit(position)"">Editar</md-button>
+                            <md-button  class="md-raised md-primary"  ng-click="edit(position)">Editar</md-button>
                             <md-button class="md-raised md-primary" ng-click=" deletePosition(position)">Eliminar</md-button>
                         </td>
                 </table>

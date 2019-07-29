@@ -15,8 +15,8 @@
                     <md-button ng-click="cancelEditing()" class="md-raised md-primary">Cancelar</md-button>
                 </div>
             </td>
-            <td><md-button ng-show="parametric.id != parametricEditingForm.parametricEditing.id" class="md-raised md-primary" ng-click="edit(parametric)"">Editar</md-button>
-                <md-button ng-show="parametric.id != parametricEditingForm.parametricEditing.id" class="md-raised md-primary" ng-click="deleteParametric(parametric)"">Eliminar</md-button></td>
+            <td><md-button ng-show="parametric.id != parametricEditingForm.parametricEditing.id" class="md-raised md-primary" ng-click="edit(parametric)">Editar</md-button>
+                <md-button ng-show="parametric.id != parametricEditingForm.parametricEditing.id" class="md-raised md-primary" ng-click="deleteParametric(parametric)">Eliminar</md-button></td>
     </table>
     <div ng-show="(parametricsSelectedToEdit | toArray).length == 0"><i>Ninguno...</i></br></br></div>
 </div>
