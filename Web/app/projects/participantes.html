@@ -1,3 +1,50 @@
-<div>
-    
+<div ng-controller=projects.participantes ng-init=setup()>
+    <form name=participanteForm>
+        <div>
+            <md-input-container flex="12">
+                <label>Cuil/Cuit</label>
+                <input required="" ng-pattern="cuilRegExpr" placeholder="###########" name="cuilCuit" ng-model="participanteEditing.cuilCuit">
+                <div ng-messages="participanteForm.cuilCuit.$error">
+                    <div ng-message="required">Campo requerido.</div>
+                    <div ng-message="pattern">Formato esperado: ###########.</div>
+                </div>
+            </md-input-container>
+            <md-input-container flex="12">
+                <label>Rol</label>
+                <md-select required="" name="rol" ng-model="participanteEditing.rol" placeholder="Rol">
+                    <md-option value="{{rol.id}}" ng-repeat="rol in parametrics['rol']">
+                        {{  rol.name }}
+                    </md-option>
+            </md-select>
+            </md-input-container>
+            <md-button ng-click="agregarParticipante()" class="md-raised md-primary" ng-disabled="participanteForm.$invalid || dataLoading || participanteEditing.cuilCuit == null || participanteEditing.rol == null">
+                {{participanteEditingExisting ? 'Actualizar participante' : 'Guardar'}}
+            </md-button>
+            <label ng-show="participanteSaved">Guardado!</label>
+        </div>
+        <div ng-show="readOnlyMode">
+            <label ng-show="(projectEditing.participantes|toArray).length == 0 ">No hay participantes cargadas</label>
+        </div>
+        <div ng-show="projectEditing.participantes!=null">
+            <div>
+                <h4><span>Participantes de {{projectEditing.projectName}}</span></h4>
+            </div>
+            <div>
+                <table>
+                    <tr>
+                        <th>Cuil/Cuit</th>
+                        <th>Rol</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="participante in projectEditing.participantes">
+                        <td>{{participante.cuilCuit}}</td>
+                        <td>{{parametrics['rol'][participante.rol].name}}</td>
+                        <td  ng-show=" !readOnlyMode">
+                            <md-button  class="md-raised md-primary" ng-click="editParticipante(participante)">Editar</md-button>
+                            <md-button class="md-raised md-primary" ng-click=" eliminarParticipante(participante)">Eliminar</md-button>
+                        </td>
+                </table>
+            </div>
+        </div>
+    </form>
 </div>

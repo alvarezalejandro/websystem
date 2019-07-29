@@ -24,7 +24,7 @@
                 <tr>
                     <th>Datos Personales</th>
                     <th>Formación</th>
-                    <th>Cargos</th>
+                    <th>Proyectos</th>
                     <th></th>
                 </tr>
                 <tr ng-repeat="researcher in filteredResearchers | startFromGrid: currentPage * pageSize | limitTo: pageSize" ng-click='seleccionarUsuario(usuario.id)'>
@@ -48,6 +48,17 @@
                             <md-list-item class="md-3-line" ng-repeat="formation in researcher.formations | toArray">
                                 <div class="md-list-item-text">
                                     <h3>{{parametrics['academicDegree'][formation.academicDegree].name}} - {{parametrics['degreeArea'][formation.degreeArea].careers[formation.career].name}}</h3>
+                                </div>
+                                <md-divider md-inset ng-if="!$last"></md-divider>
+                            </md-list-item>
+                        </md-list>
+                    </td>
+                    <td>
+                        <md-list>
+                            <md-list-item class="md-3-line" ng-repeat="proyecto in participacionProyectos(researcher) | toArray">
+                                <div class="md-list-item-text">
+                                    <!--<h3>{{proyecto.nombre}} - {{proyecto.rolParticipante}}</h3>-->
+                                    <h3>{{proyecto}}</h3>
                                 </div>
                                 <md-divider md-inset ng-if="!$last"></md-divider>
                             </md-list-item>

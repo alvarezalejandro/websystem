@@ -23,7 +23,7 @@
                 <md-checkbox ng-checked="exists(departamento, secretariasSeleccionadas)" ng-click="toggle(departamento, secretariasSeleccionadas);search()">{{ departamento.name }}</md-checkbox>
             </div>
         </div>
-        <div layout="column" style="padding-left: 30px" ng-show="convocatorySelected">
+        <div layout="column" style="padding-left: 30px;height: 50px" ng-show="convocatorySelected">
             <!--<md-checkbox aria-label="Select All" ng-checked="isCheckedAreas()" ng-click="toggleAllAreas()">
                 <span ng-if="isCheckedAreas()">Des-</span>Seleccionar todos
             </md-checkbox>-->
@@ -32,17 +32,22 @@
                 <md-checkbox ng-checked="exists(area, areasSeleccionadas)" ng-click="toggle(area, areasSeleccionadas);search()">{{ area.name }}</md-checkbox>
             </div>
         </div>
-        <div layout="column" style="padding-left: 30px" ng-show="convocatorySelected">
+        <div layout="column" style="padding-left: 30px;height: 50px" ng-show="convocatorySelected">
             <div>Financiado</div>
             <div flex="100" ng-show ="convocatorySelected" ng-repeat="financiado in financiadoBinario">
                 <md-checkbox ng-checked="exists(financiado, financiadosSeleccionados)" ng-click="toggle(financiado, financiadosSeleccionados);search()">{{ financiado }}</md-checkbox>
             </div>
+        </div>
+        <div layout="column" style="padding-left: 30px;height: 50px" ng-show="convocatorySelected">
             <div>Activo</div>
             <div flex="100" ng-show ="convocatorySelected" ng-repeat="activo in activoBinario">
                 <md-checkbox ng-checked="exists(activo, activosSeleccionados)" ng-click="toggle(activo, activosSeleccionados);search()">{{ activo }}</md-checkbox>
             </div>
         </div>
     </div>
+    <div layout="row">
+            <md-button class="md-raised md-primary" ui-sref="projects.new({idConvocatory:convocatorySelected})">Agregar nuevo</md-button>
+        </div>
     <div layout="row" ng-show="projects === undefined" layout-sm="column" layout-align="left">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>

@@ -2,6 +2,13 @@
     <form name="convocatoryForm">
         <div layout="row">
             <md-input-container flex="20">
+                <label>Número de resolución</label>
+                <input required="" name="resolucion" ng-disabled="readOnlyMode" ng-model="convocatoryEditing.resolucion">
+                <div ng-messages="researcherForm.resolucion.$error">
+                    <div ng-message="required">Campo requerido.</div>
+                </div>
+            </md-input-container>
+            <md-input-container flex="20">
                 <label>Nombre de Convocatoria</label>
                 <input required="" name="type" ng-disabled="readOnlyMode" ng-model="convocatoryEditing.type">
                 <div ng-messages="researcherForm.type.$error">

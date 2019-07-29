@@ -280,13 +280,15 @@ angular.module('Researchers')
     ]);
 
 angular.module('Researchers')
-    .controller('researchers.list', ['$scope', '$filter', 'researcherService', 'parametricService', function($scope, $filter, researcherService, parametricService) {
+    .controller('researchers.list', ['$scope', '$filter', 'researcherService', 'parametricService', 'convocatoryService', function($scope, $filter, researcherService, parametricService,convocatoryService) {
         $scope.setup = function () {
+            $scope.llamadosAFuncion = 0;
             $scope.firstTime = true;
             $scope.filteredResearchers = [];
             $scope.pages = [];
             loadResearchers();
             loadParametrics();
+            loadConvocatories();
             $scope.readOnlyMode = false;
             $scope.currentPage = 0;
             $scope.pageSize = 10;
@@ -306,15 +308,35 @@ angular.module('Researchers')
         $scope.setPage = function(index) {
             $scope.currentPage = index - 1;
         };
+        $scope.participacionProyectos = function(researcher){
+            var convocatorias = $filter('toArray')($scope.convocatories);
+            var proyectosFiltrados = [];
+            for(var index=0;index<convocatorias.length;index++){
+                var proyectos =  isNullOrUndefined(convocatorias[index].projects) ? {} : convocatorias[index].projects;
+                proyectos = $filter('toArray')(proyectos);
+                for(var i=0;i<proyectos.length;i++){
+                    var participantes = $filter('toArray')(proyectos[i].participantes);
+                    for(var idx=0;idx<participantes.length;idx++){
+                        if(participantes[idx].cuilCuit == researcher.cuilCuit){
+                            proyectosFiltrados.push(proyectos[i].ID + " - " + $scope.parametrics['rol'][participantes[idx].rol].name);
+                        }
+                    }
+                }
+            }
+            return proyectosFiltrados;
+        };
         $scope.exportCSVFile = function (headers, items, fileTitle) {
             var itemsFormatted = [];
             items.forEach((item) => {
                 itemsFormatted.push({
                     name : item.name,
                     surname : item.surname,
+                    cuilCuit : item.cuilCuit,
                     gender : item.gender === 'male' ? 'hombre' : 'mujer',
-                    titulo : item.titulo,
-                    areaDeFormacion : item.areaDeFormacion
+                    titulo : mayorTitulo(item),
+                    disciplina : disciplinaMayor(item),
+                    email : item.email,
+                    proyectos : $scope.participacionProyectos(item)
                 });
             });
 
@@ -344,6 +366,14 @@ angular.module('Researchers')
         var loadResearchers = function () {
             researcherService.getResearchers(refreshResearchers);
         },
+        mayorTitulo = function(researcher){
+            var formation = $filter('toArray')(researcher.formations);
+            return $scope.parametrics['tipoDeFormacion'][formation[0].tipoDeFormacion].gradoDeTitulacion[formation[0].gradoDeTitulacion].name;
+        },
+        disciplinaMayor = function(researcher){
+            var formation = $filter('toArray')(researcher.formations);
+            return $scope.parametrics['degreeArea'][formation[0].degreeArea].careers[formation[0].career].name
+        },
         refreshResearchers = function(researchers){
            if(researchers == null || Object.keys(researchers).length==0){
                $scope.researchers = null;
@@ -360,6 +390,13 @@ angular.module('Researchers')
         },
         loadParametrics = function () {
             parametricService.getParametrics(refreshParametrics);
+        },
+        loadConvocatories = function () {
+            convocatoryService.getConvocatories(refreshConvocatories);
+        },
+        refreshConvocatories = function (convocatories) {
+            $scope.convocatories = convocatories;
+            $scope.$apply();
         },
         refreshParametrics = function (parametrics) {
             $scope.parametrics = parametrics;

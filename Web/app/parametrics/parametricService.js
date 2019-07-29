@@ -26,7 +26,8 @@ angular.module('Parametrics').factory('parametricService', ['dataService',
                     gradoDeTitulacion: {page:'formation', type: 'gradoDeTitulacion', name: 'Grado de Titulación', listTitle: 'Grados de Titulación', newTitle: 'Agregar nuevo grado de titulación'},
                     organismoDeCategorizacion: {page:'formation', type: 'organismoDeCategorizacion', name: 'Organismo de Categorización', listTitle: 'Organismo de Categorización', newTitle: 'Agregar nuevo organizmo de categorización'},
                     categoria: {page:'formation', type: 'categoria', name: 'Categoría', listTitle: 'Categoría', newTitle: 'Agregar nueva categoría'},
-                    tipoDeInvestigacion: {page:'projects', type: 'tipoDeInvestigacion', name: 'Tipo de Investigación', listTitle: 'Tipo de Investigación', newTitle: 'Agregar nuevo tipo de investigación'}
+                    tipoDeInvestigacion: {page:'projects', type: 'tipoDeInvestigacion', name: 'Tipo de Investigación', listTitle: 'Tipo de Investigación', newTitle: 'Agregar nuevo tipo de investigación'},
+                    rol: {page:'participantes', type: 'rol', name: 'Rol', listTitle: 'Rol', newTitle: 'Agregar nuevo Rol'},
                 };
             },
             saveParametric: function(parametricType, parametric, onSaved){

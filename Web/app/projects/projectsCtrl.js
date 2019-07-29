@@ -195,10 +195,10 @@ angular.module('Projects')
                 $scope.reports = ['Aprobado', 'En Observación', 'Desaprobado'];
             };
             $scope.save = function () {
-                if (typeof $scope.fechaDeAlta !== 'string' && !isNullOrUndefined($scope.fechaDeAlta)) {
+                if (typeof $scope.projectEditing.fechaDeAlta != 'string' && $scope.projectEditing.fechaDeAlta != undefined) {
                     $scope.projectEditing.fechaDeAlta = $scope.projectEditing.fechaDeAlta.toJSON();
                 }
-                if (typeof $scope.fechaDeBaja !== 'string' && !isNullOrUndefined($scope.fechaDeBaja)) {
+                if (typeof $scope.projectEditing.fechaDeBaja != 'string' && $scope.projectEditing.fechaDeBaja != undefined) {
                     $scope.projectEditing.fechaDeBaja = $scope.projectEditing.fechaDeBaja.toJSON();
                 }
                 $scope.projectSaved  = false;
@@ -284,10 +284,33 @@ angular.module('Projects')
     ]);
 
     angular.module('Projects')
-    .controller('projects.participantes', ['$scope',
-        function ($scope) {
+    .controller('projects.participantes', ['$scope','projectService','$stateParams',
+        function ($scope,projectService,$stateParams) {
             $scope.setup = function()
             {
+                $scope.cuilRegExpr = '^\\d{2}\\d{8}\\d{1}$';
+                $scope.participanteSaved = false;
+                $scope.participanteEditing = {cuilCuit: null};
+                $scope.participanteEditingExisting = false;
+            };
+            $scope.agregarParticipante = function(){
+
+                projectService.agregarParticipante($stateParams.idConvocatory,$scope.projectEditing, $scope.participanteEditing, onParticipanteUpdated);
+            };
+            $scope.eliminarParticipante = function(participante){
+                projectService.eliminarParticipante($stateParams.idConvocatory,$scope.projectEditing, participante)
+            };
+            $scope.editParticipante = function(participante)
+            {
+                $scope.participanteSaved = false;
+                $scope.participanteEditing = angular.copy(participante);
+                $scope.participanteEditingExisting = true;
+            };
+            var onParticipanteUpdated = function () {
+                $scope.participanteSaved = true;
+                $scope.participanteEditingExisting = false;
+                $scope.participanteEditing = {id: null};
+                $scope.$apply();
             }
         }
     ]);
