@@ -14,6 +14,8 @@ angular.module('Convocatories')
         function ($scope,$filter, convocatoryService) {
             $scope.setup = function()
             {
+                $scope.activoBinario = ["Si","No"];
+                $scope.activosSeleccionados = [];
                 $scope.searchText = '';
                 $scope.searchYearText = '';
                 $scope.firstTime = true;
@@ -34,9 +36,33 @@ angular.module('Convocatories')
                 if(typeof $scope.searchYearText == 'string' && $scope.searchYearText != ''){
                     $scope.filteredConvocatories = $filter('filter')($scope.filteredConvocatories, function(value) { return value.year== $scope.searchYearText});
                 }
+                if($scope.activosSeleccionados.length == 1){
+                    $scope.filteredConvocatories = $filter('filter')($scope.filteredConvocatories, function(value){ return $scope.activosSeleccionados.includes("Si") ? $scope.convocatoriaActiva(value) : !$scope.convocatoriaActiva(value)});
+                }
                 if(items.length != $scope.filteredConvocatories.length)
                 {
                     configPages($scope.filteredConvocatories);
+                }
+            };
+            $scope.convocatoriaActiva = function(convocatoria) {
+                var today = new Date(Date.now());
+                if(convocatoria.endDate != null || new Date(convocatoria.endDate) <= today){
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            };
+            $scope.exists = function (item, items) {
+                return items.indexOf(item) > -1;
+            };
+            $scope.toggle = function (item, items) {
+                var idx = items.indexOf(item);
+                if (idx > -1) {
+                    items.splice(idx, 1);
+                }
+                else {
+                    items.push(item);
                 }
             };
 

@@ -8,12 +8,20 @@
             <img ng-show="convocatories" src="../assets/img/LUPA-128.png" class="inputImage">
         </div>
         <div layout="row">
-                <md-input-container class="md-icon-float md-block" flex="30" ng-show="convocatories">
-                    <label> Buscar por año... </label>
-                    <input ng-model="searchYearText" ng-change="search()" >
-                </md-input-container>
-                <img ng-show="convocatories" src="../assets/img/LUPA-128.png" class="inputImage">
+            <md-input-container class="md-icon-float md-block" flex="30" ng-show="convocatories">
+                <label> Buscar por año... </label>
+                <input ng-model="searchYearText" ng-change="search()" >
+            </md-input-container>
+            <img ng-show="convocatories" src="../assets/img/LUPA-128.png" class="inputImage">
+        </div>
+        <div layout="row">
+            <div layout="column">
+                <div>Activo</div>
+                <div flex="100" ng-repeat="activo in activoBinario">
+                    <md-checkbox ng-checked="exists(activo, activosSeleccionados)" ng-click="toggle(activo, activosSeleccionados);search()">{{ activo }}</md-checkbox>
+                </div>
             </div>
+        </div>
         <div layout="row">
             <md-button class="md-raised md-primary" ui-sref="convocatories.new">Agregar nuevo</md-button>
         </div>
@@ -31,28 +39,20 @@
                     <th>Evaluciones Externas</th>
                     <th>Fecha de Inicio</th>
                     <th>Fecha de Cierre</th>
+                    <th>Activo</th>
                     <th></th>
                 </tr>
                 <tr ng-repeat="convocatory in filteredConvocatories">
                     <td>{{convocatory.type}}</td>
                     <td>{{convocatory.year}}</td>
-                    <td ng-if="convocatory.externalEvaluations=='true'">
-                        {{"Si"}}
-                    </td>
-                    <td ng-if="convocatory.externalEvaluations=='false'">
-                        {{"No"}}
-                    </td>
-                    <td ng-if="convocatory.startDate">
-                        {{convocatory.startDate.getDate()+'/'+(convocatory.startDate.getMonth()+1)+'/'+convocatory.startDate.getFullYear()}}
-                    </td>
-                    <td ng-if="convocatory.endDate">
-                        {{convocatory.endDate.getDate()+'/'+(convocatory.endDate.getMonth()+1)+'/'+convocatory.endDate.getFullYear()}}
-                    </td>
+                    <td ng-if="convocatory.externalEvaluations=='true'">{{"Si"}}</td>
+                    <td ng-if="convocatory.externalEvaluations=='false'">{{"No"}}</td>
+                    <td ng-if="convocatory.startDate">{{convocatory.startDate.getDate()+'/'+(convocatory.startDate.getMonth()+1)+'/'+convocatory.startDate.getFullYear()}}</td>
+                    <td ng-if="convocatory.endDate">{{convocatory.endDate.getDate()+'/'+(convocatory.endDate.getMonth()+1)+'/'+convocatory.endDate.getFullYear()}}</td>
                     <td ng-if="!convocatory.startDate"></td>
                     <td ng-if="!convocatory.endDate"></td>
-                    <td>
-                        <md-button class="md-raised md-primary" ui-sref="convocatories.edit({id:convocatory.id})">Editar</md-button>
-                    </td>
+                    <td>{{convocatoriaActiva(convocatory) ? "SI" : "NO"}}</td>
+                    <td><md-button class="md-raised md-primary" ui-sref="convocatories.edit({id:convocatory.id})">Editar</md-button></td>
                 </tr>
             </table>
         </div>

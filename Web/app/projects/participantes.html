@@ -1,6 +1,6 @@
 <div ng-controller=projects.participantes ng-init=setup()>
     <form name=participanteForm>
-        <div>
+        <div ng-show=" !readOnlyMode">
             <md-input-container flex="12">
                 <label>Cuil/Cuit</label>
                 <input required="" ng-pattern="cuilRegExpr" placeholder="###########" name="cuilCuit" ng-model="participanteEditing.cuilCuit">

@@ -37,16 +37,6 @@
     </div>
     <div layout="row"  ng-show=" !readOnlyMode">
         <md-input-container flex="12">
-            <label>Categoria</label>
-            <md-select ng-model="formationEditing.categorizationUniversity">
-                <md-option ng-repeat="categorizationUniversity in categorizationUniversities"  value="{{categorizationUniversity}}">
-                    {{ categorizationUniversity }}
-                </md-option>
-            </md-select>
-        </md-input-container>
-    </div>
-    <div layout="row"  ng-show=" !readOnlyMode">
-        <md-input-container flex="12">
             <md-select ng-model="formationEditing.formationCompleted" placeholder="Estado">
                 <md-option ng-repeat="studiesState in studiesStates"  value="{{studiesState.value}}">
                     {{ studiesState.name }}

@@ -214,9 +214,9 @@ angular.module('Researchers')
             };
 
             $scope.permissionToSave = function (position, flag) {
-                var isDisabled=false;
+                var isDisabled=true;
                 $scope.positionSaved = false;
-                if(flag!='3'){
+                /*if(flag!='3'){
                     if(position.secretaryshipDepartment==null
                         || position.career ==null
                         || position.subject==null
@@ -231,6 +231,14 @@ angular.module('Researchers')
                         || position.idDedication ==null
                         || position.typeOfRecruitment ==null){
                         isDisabled = true;
+                    }
+                }*/
+                if(flag=='1' || flag=='2' || flag=='3'){
+                    if(position.secretaryshipDepartment!=null
+                        && position.positionType!=null
+                        && position.idDedication !=null
+                        && position.typeOfRecruitment !=null){
+                        isDisabled = false;
                     }
                 }
                 return isDisabled;
@@ -282,7 +290,11 @@ angular.module('Researchers')
 angular.module('Researchers')
     .controller('researchers.list', ['$scope', '$filter', 'researcherService', 'parametricService', 'convocatoryService', function($scope, $filter, researcherService, parametricService,convocatoryService) {
         $scope.setup = function () {
-            $scope.llamadosAFuncion = 0;
+            $scope.gradosDeTitulacionSeleccionados = [];
+            $scope.areasSeleccionadas = [];
+            $scope.tiposDeCargoSeleccionados = [];
+            $scope.secretariasSeleccionadas = [];
+            $scope.dedicacionesSeleccionadas = [];
             $scope.firstTime = true;
             $scope.filteredResearchers = [];
             $scope.pages = [];
@@ -299,6 +311,71 @@ angular.module('Researchers')
         $scope.search= function(){
                 var items = $filter('toArray')($scope.researchers);
                 $scope.filteredResearchers = $filter('filter')(items, $scope.searchText);
+                if($scope.gradosDeTitulacionSeleccionados.length > 0){
+                    $scope.filteredResearchers = $filter('filter')($scope.filteredResearchers, function(value){
+                        var formaciones = $filter('toArray')(value.formations);
+                        for (var i=0;i<$scope.gradosDeTitulacionSeleccionados.length;i++){
+                            for(var idx=0;idx<formaciones.length;idx++){
+                                if(formaciones[idx].gradoDeTitulacion == $scope.gradosDeTitulacionSeleccionados[i].id){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    });
+                }
+                if($scope.areasSeleccionadas.length > 0){
+                    $scope.filteredResearchers = $filter('filter')($scope.filteredResearchers, function(value){
+                        var formaciones = $filter('toArray')(value.formations);
+                        for (var i=0;i<$scope.areasSeleccionadas.length;i++){
+                            for(var idx=0;idx<formaciones.length;idx++){
+                                if(formaciones[idx].degreeArea == $scope.areasSeleccionadas[i].id){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    });
+                }
+                if($scope.tiposDeCargoSeleccionados.length > 0){
+                    $scope.filteredResearchers = $filter('filter')($scope.filteredResearchers, function(value){
+                        var docencia = $filter('toArray')(value.positions);
+                        for (var i=0;i<$scope.tiposDeCargoSeleccionados.length;i++){
+                            for(var idx=0;idx<docencia.length;idx++){
+                                if(docencia[idx].positionType == $scope.tiposDeCargoSeleccionados[i].id){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    });
+                }
+                if($scope.secretariasSeleccionadas.length > 0){
+                    $scope.filteredResearchers = $filter('filter')($scope.filteredResearchers, function(value){
+                        var docencia = $filter('toArray')(value.positions);
+                        for (var i=0;i<$scope.secretariasSeleccionadas.length;i++){
+                            for(var idx=0;idx<docencia.length;idx++){
+                                if(docencia[idx].secretaryshipDepartment == $scope.secretariasSeleccionadas[i].id){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    });
+                }
+                if($scope.dedicacionesSeleccionadas.length > 0){
+                    $scope.filteredResearchers = $filter('filter')($scope.filteredResearchers, function(value){
+                        var docencia = $filter('toArray')(value.positions);
+                        for (var i=0;i<$scope.dedicacionesSeleccionadas.length;i++){
+                            for(var idx=0;idx<docencia.length;idx++){
+                                if(docencia[idx].idDedication == $scope.dedicacionesSeleccionadas[i].id){
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    });
+                }
                 if(items.length != $scope.filteredResearchers.length)
                 {
                     configPages($scope.filteredResearchers);
@@ -325,18 +402,44 @@ angular.module('Researchers')
             }
             return proyectosFiltrados;
         };
+        $scope.docenciaFormateada = function(researcher){
+            var docencia = $filter('toArray')(researcher.positions);
+            var docenciaFormateada = [];
+            for(var i=0;i<docencia.length;i++){
+                docenciaFormateada.push(
+                    $scope.parametrics['positionType'][docencia[i].positionType].name + " - " +
+                    $scope.parametrics['idDedication'][docencia[i].idDedication].name + " - " +
+                    $scope.parametrics['secretaryshipDepartment'][docencia[i].secretaryshipDepartment].name + " - " +
+                    $scope.parametrics['typeOfRecruitment'][docencia[i].typeOfRecruitment].name)
+            }
+            return docenciaFormateada;
+        };
         $scope.exportCSVFile = function (headers, items, fileTitle) {
             var itemsFormatted = [];
+            itemsFormatted.push({
+                surname : "Apellido",
+                name : "Nombre",                
+                cuilCuit : "Cuil/Cuit",
+                age : "Edad",
+                gender : "Genero",
+                email : "e-mail",                
+                titulo : "Mayor titulo",
+                disciplina : "Disciplina",                
+                proyectos : "Proyectos",
+                docencia : "Docencia"
+            });
             items.forEach((item) => {
                 itemsFormatted.push({
-                    name : item.name,
                     surname : item.surname,
+                    name : item.name,                    
                     cuilCuit : item.cuilCuit,
+                    age: calcularEdad(item),
                     gender : item.gender === 'male' ? 'hombre' : 'mujer',
-                    titulo : mayorTitulo(item),
-                    disciplina : disciplinaMayor(item),
                     email : item.email,
-                    proyectos : $scope.participacionProyectos(item)
+                    titulo : mayorTitulo(item),                    
+                    disciplina : disciplinaMayor(item),                    
+                    proyectos : $scope.participacionProyectos(item).toString().replace(/,/g,'/',),
+                    docencia : $scope.docenciaFormateada(item).toString().replace(/,/g,'/',)
                 });
             });
 
@@ -363,8 +466,28 @@ angular.module('Researchers')
                 }
             }
         };
+        $scope.exists = function (item, items) {
+            return items.indexOf(item) > -1;
+        };
+        $scope.toggle = function (item, items) {
+            var idx = items.indexOf(item);
+            if (idx > -1) {
+                items.splice(idx, 1);
+            }
+            else {
+                items.push(item);
+            }
+        };
         var loadResearchers = function () {
             researcherService.getResearchers(refreshResearchers);
+        },
+        calcularEdad = function(researcher){
+            var today = new Date(Date.now());
+            var birthday = new Date(Date.now());
+            if (typeof researcher.birthday === 'string') {
+                birthday = new Date(researcher.birthday);
+            }
+            return today.getFullYear() - birthday.getFullYear();
         },
         mayorTitulo = function(researcher){
             var formation = $filter('toArray')(researcher.formations);
@@ -474,3 +597,33 @@ angular.module('Researchers')
             }
         }
     ]);
+
+angular.module('Researchers')
+    .controller('researchers.categorizacion', ['$scope','researcherService',
+        function ($scope,researcherService) {
+            $scope.setup = function()
+            {
+                $scope.categorizacionSaved = false;
+                $scope.categorizacionEditing = {id: null};
+                $scope.categorizacionEditingExisting = false;
+            };
+            $scope.agregarCategorizacion = function(){
+                researcherService.agregarCategorizacion($scope.researcherEditing.id, $scope.categorizacionEditing, onCategorizacionUpdated);
+            };
+            $scope.eliminarCategorizacion = function(categorizacion){
+                researcherService.eliminarCategorizacion($scope.researcherEditing.id, categorizacion);
+            };
+            $scope.editCategorizacion = function(categorizacion)
+            {
+                $scope.categorizacionSaved = false;
+                $scope.categorizacionEditing = angular.copy(categorizacion);
+                $scope.categorizacionEditingExisting = true;
+            };
+            var onCategorizacionUpdated = function () {
+                $scope.categorizacionSaved = true;
+                $scope.categorizacionEditingExisting = false;
+                $scope.categorizacionEditing = {id: null};
+                $scope.$apply();
+            }
+    }
+]);

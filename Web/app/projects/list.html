@@ -2,6 +2,7 @@
     <div layout="row">
         <md-input-container>
             <md-select ng-model="convocatorySelected" ng-change="changeConvocatoriesToEdit()" placeholder="Elije una Convocatoria">
+                <md-option><em>Todas</em></md-option>
                 <md-option ng-repeat="convocatory in  convocatories | toArray" value="{{convocatory.id}}">{{  convocatory.type }}</md-option>
             </md-select>
         </md-input-container>
@@ -46,7 +47,7 @@
         </div>
     </div>
     <div layout="row">
-            <md-button class="md-raised md-primary" ui-sref="projects.new({idConvocatory:convocatorySelected})">Agregar nuevo</md-button>
+            <md-button class="md-raised md-primary" ng-show="convocatorySelected!='Todas' && convocatorySelected!=null" ui-sref="projects.new({idConvocatory:convocatorySelected})">Agregar nuevo</md-button>
         </div>
     <div layout="row" ng-show="projects === undefined" layout-sm="column" layout-align="left">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -72,7 +73,7 @@
                     <td >{{proyectoActivo(project) ? "SI" : "NO"}}</td>
                     <td ng-if="!convocatory.endDate"></td>
                     <td>
-                        <md-button class="md-raised md-primary" ui-sref="projects.edit({idConvocatory:convocatorySelected, idProject:project.id})">Editar</md-button>
+                        <md-button class="md-raised md-primary" ui-sref="projects.edit({idConvocatory:project.convocatoria, idProject:project.id})">Editar</md-button>
                     </td>
                 </tr>
             </table>

@@ -16,6 +16,42 @@
             <img ng-show="researchers" src="../assets/img/LUPA-128.png" class="inputImage">
             <md-button class="buttonResearcher md-raised md-primary" ui-sref="researchers.new">Agregar nuevo</md-button>
         </div>
+
+        <div layout="row">
+            <div flex="10" ng-repeat="tipoDeFormacion in parametrics['tipoDeFormacion']">
+                <div layout="column">
+                    <div>{{tipoDeFormacion.name}}</div>
+                    <div flex="100" ng-repeat="gradoDeTitulacion in parametrics['tipoDeFormacion'][tipoDeFormacion.id].gradoDeTitulacion">
+                        <md-checkbox ng-checked="exists(gradoDeTitulacion, gradosDeTitulacionSeleccionados)" ng-click="toggle(gradoDeTitulacion, gradosDeTitulacionSeleccionados);search()">{{ gradoDeTitulacion.name }}</md-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div layout="column" style="padding-left: 30px;height: 50px">
+                <div>Area de Formación</div>
+                <div flex="100" ng-repeat="area in parametrics['degreeArea']">
+                    <md-checkbox ng-checked="exists(area, areasSeleccionadas)" ng-click="toggle(area, areasSeleccionadas);search()">{{ area.name }}</md-checkbox>
+                </div>
+            </div>
+            <div layout="column" style="padding-left: 30px;height: 50px">
+                <div>Tipo de Cargo</div>
+                <div flex="100" ng-repeat="tipoDeCargo in parametrics['positionType']">
+                    <md-checkbox ng-checked="exists(tipoDeCargo, tiposDeCargoSeleccionados)" ng-click="toggle(tipoDeCargo, tiposDeCargoSeleccionados);search()">{{ tipoDeCargo.name }}</md-checkbox>
+                </div>
+            </div>
+            <div layout="column" style="padding-left: 30px;height: 50px">
+                <div>Dedicación</div>
+                <div flex="100" ng-repeat="dedicacion in parametrics['idDedication']">
+                    <md-checkbox ng-checked="exists(dedicacion, dedicacionesSeleccionadas)" ng-click="toggle(dedicacion, dedicacionesSeleccionadas);search()">{{ dedicacion.name }}</md-checkbox>
+                </div>
+            </div>
+            <div layout="column" style="padding-left: 30px;height: 50px">
+                <div>Secretaria/Departamento</div>
+                <div flex="100" ng-repeat="secretaria in parametrics['secretaryshipDepartment']">
+                    <md-checkbox ng-checked="exists(secretaria, secretariasSeleccionadas)" ng-click="toggle(secretaria, secretariasSeleccionadas);search()">{{ secretaria.name }}</md-checkbox>
+                </div>
+            </div>
+        </div>
+
         <div layout="row">
             <md-button ng-show=" !readOnlyMode" class="md-raised md-primary" ng-click="exportCSVFile('',filteredResearchers,'investigadores')">Descargar Investigadores</md-button>
         </div>
@@ -47,7 +83,7 @@
                         <md-list>
                             <md-list-item class="md-3-line" ng-repeat="formation in researcher.formations | toArray">
                                 <div class="md-list-item-text">
-                                    <h3>{{parametrics['academicDegree'][formation.academicDegree].name}} - {{parametrics['degreeArea'][formation.degreeArea].careers[formation.career].name}}</h3>
+                                    <h3>{{parametrics['tipoDeFormacion'][formation.tipoDeFormacion].gradoDeTitulacion[formation.gradoDeTitulacion].name}} - {{parametrics['degreeArea'][formation.degreeArea].careers[formation.career].name}}</h3>
                                 </div>
                                 <md-divider md-inset ng-if="!$last"></md-divider>
                             </md-list-item>

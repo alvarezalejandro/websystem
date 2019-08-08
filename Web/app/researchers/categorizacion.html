@@ -1,0 +1,50 @@
+<div ng-controller=researchers.categorizacion ng-init=setup()>
+    <form name=categorizacionForm>
+        <div ng-show=" !readOnlyMode">
+            <md-input-container flex="12">
+                <label>Organismo de Categorización</label>
+                <md-select ng-model="categorizacionEditing.organismoDeCategorizacion">
+                    <md-option ng-repeat="organismoDeCategorizacion in parametrics['organismoDeCategorizacion']"  value="{{organismoDeCategorizacion.id}}">
+                        {{ organismoDeCategorizacion.name }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container flex="12">
+                <label>Categoría</label>
+                <md-select ng-model="categorizacionEditing.categoria">
+                    <md-option ng-repeat="categoria in parametrics['organismoDeCategorizacion'][categorizacionEditing.organismoDeCategorizacion].categoria"  value="{{categoria.id}}">
+                        {{ categoria.name }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-button ng-click="agregarCategorizacion()" class="md-raised md-primary" ng-disabled="categorizacionForm.$invalid || dataLoading || categorizacionEditing.organismoDeCategorizacion == null || categorizacionEditing.categoria == null">
+                {{categorizacionEditingExisting ? 'Actualizar categorizacion' : 'Guardar'}}
+            </md-button>
+            <label ng-show="categorizacionSaved">Guardado!</label>
+        </div>
+        <div ng-show="readOnlyMode">
+            <label ng-show="(researcherEditing.categorizaciones|toArray).length == 0 ">No hay categorizaciones cargadas</label>
+        </div>
+        <div ng-show="researcherEditing.categorizaciones!=null">
+            <div>
+                <h4><span>Categorizaciones de {{researcherEditing.surname + ' ' + researcherEditing.name}}</span></h4>
+            </div>
+            <div>
+                <table>
+                    <tr>
+                        <th>Organismo de Categorizacion</th>
+                        <th>Categoría</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="categorizacion in researcherEditing.categorizaciones">
+                        <td>{{parametrics['organismoDeCategorizacion'][categorizacion.organismoDeCategorizacion].name}}</td>
+                        <td>{{parametrics['organismoDeCategorizacion'][categorizacion.organismoDeCategorizacion].categoria[categorizacion.categoria].name}}</td>
+                        <td  ng-show=" !readOnlyMode">
+                            <md-button  class="md-raised md-primary" ng-click="editCategorizacion(categorizacion)">Editar</md-button>
+                            <md-button class="md-raised md-primary" ng-click=" eliminarCategorizacion(categorizacion)">Eliminar</md-button>
+                        </td>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>

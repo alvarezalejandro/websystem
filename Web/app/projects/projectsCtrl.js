@@ -160,9 +160,24 @@ angular.module('Projects')
                         $scope.$apply();
                     },
                     setProjectsToListAndEdit = function(){
-                        $scope.projects =  isNullOrUndefined($scope.convocatories[$scope.convocatorySelected].projects) ? {} : $scope.convocatories[$scope.convocatorySelected].projects;
-                        $scope.filteredProjects = $scope.projects;
-                    
+                        if($scope.convocatorySelected == "Todas"){
+                            var convocatorias = $filter('toArray')($scope.convocatories);
+                            var proyectosFiltrados = [];
+                            for(var index=0;index<convocatorias.length;index++){
+                                console.log("Convocatoria numero: " + index+1);
+                                var proyectos =  isNullOrUndefined(convocatorias[index].projects) ? {} : convocatorias[index].projects;
+                                proyectos = $filter('toArray')(proyectos);
+                                for(var i=0;i<proyectos.length;i++){
+                                    proyectosFiltrados.push(proyectos[i]);
+                                }
+                            }
+                            $scope.projects = proyectosFiltrados;
+                            $scope.filteredProjects = $scope.projects;
+                        }
+                        else{
+                            $scope.projects =  isNullOrUndefined($scope.convocatories[$scope.convocatorySelected].projects) ? {} : $scope.convocatories[$scope.convocatorySelected].projects;
+                            $scope.filteredProjects = $scope.projects;
+                        }                    
                 };
         }
     ]);
@@ -183,7 +198,8 @@ angular.module('Projects')
             {
                 if (isAddingANewProject()) {
                     $scope.projectEditing = {
-                        id: null
+                        id: null,
+                        convocatoria: $stateParams.idConvocatory
                     };
                 } else {
                     projectService.getProject($stateParams.idConvocatory, $stateParams.idProject, setProjectsToEdit);
@@ -201,6 +217,7 @@ angular.module('Projects')
                 if (typeof $scope.projectEditing.fechaDeBaja != 'string' && $scope.projectEditing.fechaDeBaja != undefined) {
                     $scope.projectEditing.fechaDeBaja = $scope.projectEditing.fechaDeBaja.toJSON();
                 }
+
                 $scope.projectSaved  = false;
                 projectService.save($stateParams.idConvocatory, $scope.projectEditing, onProjectSaved);
             };

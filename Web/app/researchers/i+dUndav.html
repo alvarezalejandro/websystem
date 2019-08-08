@@ -6,19 +6,35 @@
                 <md-option ng-value="positionType.id" ng-repeat="positionType in positionTypes">{{ positionType.name }}</md-option>
             </md-select>
         </md-input-container>
-        <md-input-container>
+        <!--<md-input-container>
             <label>Modalidad</label>
             <md-select ng-model="positionEditing.modality" placeholder="Modalidad">
                 <md-option ng-value="modality.id" ng-repeat="modality in modalities">{{ modality.name }}</md-option>
             </md-select>
-        </md-input-container>
+        </md-input-container>-->
         <md-input-container>
             <label>Dedicación a I+D</label>
             <md-select ng-model="positionEditing.idDedication" placeholder="Dedicación a I+D">
                 <md-option ng-value="idDedication.id" ng-repeat="idDedication in idDedications">{{ idDedication.name }}</md-option>
             </md-select>
         </md-input-container>
-        <md-input-container flex="12">
+        <md-input-container>
+            <label>Secretaría/Departamento</label>
+            <md-select ng-model="positionEditing.secretaryshipDepartment" placeholder="Secretaría/Departamento">
+                <md-option value="{{secretaryshipDepartment.id}}" ng-repeat="secretaryshipDepartment in  parametrics['secretaryshipDepartment']">
+                    {{  secretaryshipDepartment.name }}
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container>
+            <label>Tipo de Contratación</label>
+            <md-select ng-model="positionEditing.typeOfRecruitment" placeholder="Tipo de Contratación">
+                <md-option value="{{typeOfRecruitment.id}}" ng-repeat="typeOfRecruitment in  parametrics['typeOfRecruitment']">
+                    {{  typeOfRecruitment.name }}
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <!--<md-input-container flex="12">
             <label>Licencia</label>
             <md-select ng-model="positionEditing.license" placeholder="Licencia">
                 <md-option ng-repeat="license in licenses"  value="{{license.value}}">
@@ -35,9 +51,9 @@
         <md-input-container ng-show="positionEditing.license == 'true' && positionEditing.licenseDate!=null">
             <label>Resolución</label>
             <input name="resolution" ng-model="positionEditing.resolution">
-        </md-input-container>
+        </md-input-container>-->
     </div>
-    <div layout="row"  ng-show=" !readOnlyMode">
+    <!--<div layout="row"  ng-show=" !readOnlyMode">
         <md-input-container>
             <label>Secretaría/Departamento</label>
             <md-select ng-model="positionEditing.secretaryshipDepartment" ng-change="secretaryshipDepartmentChanged()" placeholder="Secretaría/Departamento">
@@ -58,8 +74,8 @@
                 <md-option value="{{subject.id}}" ng-repeat="subject in  parametrics['secretaryshipDepartment'][positionEditing.secretaryshipDepartment].careers[positionEditing.career].subjects">{{  subject.name }}</md-option>
             </md-select>
         </md-input-container>
-    </div>
-    <div layout="row"  ng-show=" !readOnlyMode">
+    </div>-->
+    <!--<div layout="row"  ng-show=" !readOnlyMode">
         <md-input-container>
             <label>Tipo de Contratación</label>
             <md-select ng-model="positionEditing.typeOfRecruitment" placeholder="Tipo de Contratación">
@@ -82,7 +98,7 @@
             <label>Baja en la Institución</label>
             <input type="date" ng-model="positionEditing.terminationDate">
         </md-input-container>
-    </div>
+    </div>-->
     <div layout="row"  ng-show=" !readOnlyMode">
         <md-radio-group ng-model="positionEditing.isInvestigationPosition">
             <md-radio-button value="1" class="md-primary">Docencia</md-radio-button>
@@ -108,28 +124,30 @@
                 <table>
                     <tr>
                         <th>Tipo</th>
-                        <th>Modalidad</th>
+                        <!--<th>Modalidad</th>-->
                         <th>Dedicación</th>
-                        <th>Licencia</th>
+                        <!--<th>Licencia</th>-->
                         <th>Secretaria/Departamento</th>
-                        <th>Carrera</th>
+                        <th>Tipo de Contratación</th>
+                        <!--<th>Carrera</th>
                         <th>Asignatura</th>
                         <th>Fecha Alta</th>
-                        <th>Fecha Baja</th>
+                        <th>Fecha Baja</th>-->
                         <th></th>
                     </tr>
                     <tr ng-repeat="position in researcherEditing.positions">
                         <td>{{positionTypes[position.positionType].name}}</td>
-                        <td>{{modalities[position.modality].name}}</td>
+                        <!--<td>{{modalities[position.modality].name}}</td>-->
                         <td>{{idDedications[position.idDedication].name}}</td>
-                        <td>{{position.license == 'true' ? 'Si' : 'No'}} <div ng-show="position.license == 'true'">{{position.licenseDate}} {{position.resolution}} </div></td>
+                        <!--<td>{{position.license == 'true' ? 'Si' : 'No'}} <div ng-show="position.license == 'true'">{{position.licenseDate}} {{position.resolution}} </div></td>-->
                         <td>{{parametrics['secretaryshipDepartment'][position.secretaryshipDepartment].name}}</td>
-                        <td>{{parametrics['secretaryshipDepartment'][position.secretaryshipDepartment].careers[position.career].name}}</td>
+                        <td>{{parametrics['typeOfRecruitment'][position.typeOfRecruitment].name}}</td>
+                        <!--<td>{{parametrics['secretaryshipDepartment'][position.secretaryshipDepartment].careers[position.career].name}}</td>
                         <td>{{parametrics['secretaryshipDepartment'][position.secretaryshipDepartment].careers[position.career].subjects[position.subject].name}}</td>
                         <td ng-if="position.highInTheInstitution">{{position.highInTheInstitution.getDate()+'/'+(position.highInTheInstitution.getMonth()+1)+'/'+position.highInTheInstitution.getFullYear()}}</td>
                         <td ng-if="position.terminationDate">{{position.terminationDate.getDate()+'/'+(position.terminationDate.getMonth()+1)+'/'+position.terminationDate.getFullYear()}}</td>
                         <td ng-if="!position.highInTheInstitution"></td>
-                        <td ng-if="!position.terminationDate"></td>
+                        <td ng-if="!position.terminationDate"></td>-->
                         <td></td>
                         <td ng-show=" !readOnlyMode">
                             <md-button  class="md-raised md-primary"  ng-click="edit(position)">Editar</md-button>

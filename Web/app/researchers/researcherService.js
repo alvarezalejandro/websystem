@@ -53,6 +53,18 @@ angular.module('Researchers').factory('researcherService', ['dataService',
                     return;
                 var referenceName = 'researchers/' + researcher.id +'/'+path;
                 dataService.deleteItemOfAnObject(referenceName);
+            },
+            agregarCategorizacion: function (researcher, categorizacion, onCategorizacionUpdated) {
+                if (categorizacion.categoria == null || researcher == null)
+                    return;
+                var referenceName = 'researchers/' + researcher + '/categorizaciones';
+                dataService.saveObject(referenceName, categorizacion, onCategorizacionUpdated);
+            },
+            eliminarCategorizacion: function (researcher, categorizacion) {
+                if (researcher == null || categorizacion.id == null)
+                    return;
+                    var referenceName = 'researchers/' + researcher + '/categorizaciones';
+                dataService.deleteObject(referenceName, categorizacion);
             }
         };
     }
