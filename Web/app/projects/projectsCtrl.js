@@ -86,6 +86,66 @@ angular.module('Projects')
                     configPages($scope.filteredProjects);
                 }
             };
+            $scope.exportarProyectosCSV = function (items, fileTitle) {
+                var itemsFormatted = [];
+                itemsFormatted.push({
+                    convocatoria : "Convocatoria",
+                    id : "ID proyecto",
+                    nombre : "Nombre",
+                    secretaria : "Secretaría/Departamento",
+                    objetivo : "Objetivo Socio-Económico",
+                    disciplina : "Disciplina de Aplicación",
+                    tipoInvestigacion : "Tipo de Investigación",
+                    financiamiento : "Monto de financiamiento",
+                    alta : "Fecha de alta",
+                    baja : "Fecha de baja",
+                    integrantes : "Integrantes"
+                });
+                items.forEach((item) => {
+                    itemsFormatted.push({
+                        convocatoria : $scope.convocatories[item.convocatoria].type,
+                        id : item.ID,
+                        nombre : item.projectName.toString().replace(/,/g,'/',),
+                        secretaria : "Secretaría/Departamento",//ToDo agregar muchas secretarias, iterarlas y concatenarlas
+                        objetivo : item.socioEconomicObjective ? $scope.parametrics['socioEconomicObjective'][item.socioEconomicObjective].name.toString().replace(/,/g,'/',) : '',
+                        disciplina : $scope.parametrics['degreeArea'][item.applicationDiscipline].name,
+                        tipoInvestigacion : $scope.parametrics['tipoDeInvestigacion'][item.tipoDeInvestigacion].name,
+                        financiamiento : item.totalAmountOfSubsidy,
+                        alta : item.fechaDeAlta ? (new Date(item.fechaDeAlta)).toLocaleDateString() : '',
+                        baja : item.fechaDeBaja ? (new Date(item.fechaDeBaja)).toLocaleDateString() : '',
+                        participantes : $scope.participantesFormateados(item).toString().replace(/,/g,' / ',),
+                    });
+                });
+    
+                var jsonObject = JSON.stringify(itemsFormatted);
+            
+                var csv = convertToCSV(jsonObject);
+            
+                var exportedFilename = fileTitle + '.csv' || 'export.csv';
+            
+                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                if (navigator.msSaveBlob) { // IE 10+
+                    navigator.msSaveBlob(blob, exportedFilename);
+                } else {
+                    var link = document.createElement("a");
+                    if (link.download !== undefined) { // feature detection
+                        // Browsers that support HTML5 download attribute
+                        var url = URL.createObjectURL(blob);
+                        link.setAttribute("href", url);
+                        link.setAttribute("download", exportedFilename);
+                        link.style.visibility = 'hidden';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                }
+            };
+            $scope.participantesFormateados = function (proyecto) {
+                var participantes = $filter('toArray')(proyecto.participantes);
+                var participantesFormateados = [];
+                for(var i=0;i<participantes.length;i++){participantesFormateados.push(participantes[i].cuilCuit + " - " + $scope.parametrics['rol'][participantes[i].rol].name)}
+                return participantesFormateados;
+            };
             $scope.exists = function (item, items) {
                 return items.indexOf(item) > -1;
             };
@@ -164,7 +224,6 @@ angular.module('Projects')
                             var convocatorias = $filter('toArray')($scope.convocatories);
                             var proyectosFiltrados = [];
                             for(var index=0;index<convocatorias.length;index++){
-                                console.log("Convocatoria numero: " + index+1);
                                 var proyectos =  isNullOrUndefined(convocatorias[index].projects) ? {} : convocatorias[index].projects;
                                 proyectos = $filter('toArray')(proyectos);
                                 for(var i=0;i<proyectos.length;i++){
@@ -178,6 +237,23 @@ angular.module('Projects')
                             $scope.projects =  isNullOrUndefined($scope.convocatories[$scope.convocatorySelected].projects) ? {} : $scope.convocatories[$scope.convocatorySelected].projects;
                             $scope.filteredProjects = $scope.projects;
                         }                    
+                },
+                convertToCSV = function (objArray) {
+                    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+                    var str = '';
+                
+                    for (var i = 0; i < array.length; i++) {
+                        var line = '';
+                        for (var index in array[i]) {
+                            if (line != '') line += ','
+                
+                            line += array[i][index];
+                        }
+                
+                        str += line + '\r\n';
+                    }
+                
+                    return str;
                 };
         }
     ]);

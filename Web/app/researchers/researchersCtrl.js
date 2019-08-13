@@ -414,7 +414,7 @@ angular.module('Researchers')
             }
             return docenciaFormateada;
         };
-        $scope.exportCSVFile = function (headers, items, fileTitle) {
+        $scope.exportarResearchersCSV = function (items, fileTitle) {
             var itemsFormatted = [];
             itemsFormatted.push({
                 surname : "Apellido",
@@ -436,10 +436,10 @@ angular.module('Researchers')
                     age: calcularEdad(item),
                     gender : item.gender === 'male' ? 'hombre' : 'mujer',
                     email : item.email,
-                    titulo : mayorTitulo(item),                    
-                    disciplina : disciplinaMayor(item),                    
-                    proyectos : $scope.participacionProyectos(item).toString().replace(/,/g,'/',),
-                    docencia : $scope.docenciaFormateada(item).toString().replace(/,/g,'/',)
+                    titulo : mayorTitulo(item).toString().replace(/,/g,';',),                    
+                    disciplina : disciplinaMayor(item).toString().replace(/,/g,';',),                    
+                    proyectos : $scope.participacionProyectos(item).toString().replace(/,/g,' / ',),
+                    docencia : $scope.docenciaFormateada(item).toString().replace(/,/g,' / ',)
                 });
             });
 

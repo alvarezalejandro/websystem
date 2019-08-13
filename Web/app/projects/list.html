@@ -52,6 +52,9 @@
     <div layout="row" ng-show="projects === undefined" layout-sm="column" layout-align="left">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
+    <div layout="row">
+        <md-button ng-show=" !readOnlyMode" class="md-raised md-primary" ng-click="exportarProyectosCSV(filteredProjects,'proyectos')">Descargar Proyectos</md-button>
+    </div>
     <div>
         <md-divider ng-if="convocatorySelected"></md-divider>
         <div ng-show="convocatorySelected != null">

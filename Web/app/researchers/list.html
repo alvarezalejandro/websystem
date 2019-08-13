@@ -53,7 +53,7 @@
         </div>
 
         <div layout="row">
-            <md-button ng-show=" !readOnlyMode" class="md-raised md-primary" ng-click="exportCSVFile('',filteredResearchers,'investigadores')">Descargar Investigadores</md-button>
+            <md-button ng-show=" !readOnlyMode" class="md-raised md-primary" ng-click="exportarResearchersCSV(filteredResearchers,'investigadores')">Descargar Investigadores</md-button>
         </div>
         <div class="scrollable">
             <table ng-show="researchers!=null">
