@@ -105,11 +105,11 @@ angular.module('Projects')
                     itemsFormatted.push({
                         convocatoria : $scope.convocatories[item.convocatoria].type,
                         id : item.ID,
-                        nombre : item.projectName.toString().replace(/,/g,'/',),
-                        secretaria : "Secretaría/Departamento",//ToDo agregar muchas secretarias, iterarlas y concatenarlas
-                        objetivo : item.socioEconomicObjective ? $scope.parametrics['socioEconomicObjective'][item.socioEconomicObjective].name.toString().replace(/,/g,'/',) : '',
-                        disciplina : $scope.parametrics['degreeArea'][item.applicationDiscipline].name,
-                        tipoInvestigacion : $scope.parametrics['tipoDeInvestigacion'][item.tipoDeInvestigacion].name,
+                        nombre : item.projectName.toString().replace(/,/g,';',),
+                        secretaria : $scope.secretariasFormateadas(item).toString().replace(/,/g,';',),
+                        objetivo : item.socioEconomicObjective ? $scope.parametrics['socioEconomicObjective'][item.socioEconomicObjective].name.toString().replace(/,/g,';',) : '',
+                        disciplina : $scope.parametrics['degreeArea'][item.applicationDiscipline].name.toString().replace(/,/g,';',),
+                        tipoInvestigacion : $scope.parametrics['tipoDeInvestigacion'][item.tipoDeInvestigacion].name.toString().replace(/,/g,';',),
                         financiamiento : item.totalAmountOfSubsidy,
                         alta : item.fechaDeAlta ? (new Date(item.fechaDeAlta)).toLocaleDateString() : '',
                         baja : item.fechaDeBaja ? (new Date(item.fechaDeBaja)).toLocaleDateString() : '',
@@ -146,6 +146,12 @@ angular.module('Projects')
                 for(var i=0;i<participantes.length;i++){participantesFormateados.push(participantes[i].cuilCuit + " - " + $scope.parametrics['rol'][participantes[i].rol].name)}
                 return participantesFormateados;
             };
+            $scope.secretariasFormateadas = function (proyecto) {
+                var secretarias = $filter('toArray')(proyecto.secretarias);
+                var secretariasFormateadas = [];
+                for(var i=0;i<secretarias.length;i++){secretariasFormateadas.push($scope.parametrics['secretaryshipDepartment'][secretarias[i].secretaria].name)}
+                return secretariasFormateadas;
+            };
             $scope.exists = function (item, items) {
                 return items.indexOf(item) > -1;
             };
@@ -162,20 +168,6 @@ angular.module('Projects')
                 }
                 else {
                     items.push(item);
-                }
-            };
-            $scope.toggleAllSecretarias = function() {
-                if ($scope.secretariasSeleccionadas.length === $filter('toArray')($scope.parametrics['secretaryshipDepartment']).length) {
-                  $scope.secretariasSeleccionadas = [];
-                } else if ($scope.secretariasSeleccionadas.length === 0 || $scope.secretariasSeleccionadas.length > 0) {
-                    $scope.secretariasSeleccionadas = $filter('toArray')($scope.parametrics['secretaryshipDepartment']);
-                }
-            };
-            $scope.toggleAllAreas = function() {
-                if ($scope.areasSeleccionadas.length === $filter('toArray')($scope.parametrics['degreeArea']).length) {
-                  $scope.areasSeleccionadas = [];
-                } else if ($scope.areasSeleccionadas.length === 0 || $scope.areasSeleccionadas.length > 0) {
-                    $scope.areasSeleccionadas = $filter('toArray')($scope.parametrics['degreeArea']);
                 }
             };
             var configPages = function(items) {
@@ -293,7 +285,7 @@ angular.module('Projects')
                 if (typeof $scope.projectEditing.fechaDeBaja != 'string' && $scope.projectEditing.fechaDeBaja != undefined) {
                     $scope.projectEditing.fechaDeBaja = $scope.projectEditing.fechaDeBaja.toJSON();
                 }
-
+                
                 $scope.projectSaved  = false;
                 projectService.save($stateParams.idConvocatory, $scope.projectEditing, onProjectSaved);
             };
@@ -403,6 +395,37 @@ angular.module('Projects')
                 $scope.participanteSaved = true;
                 $scope.participanteEditingExisting = false;
                 $scope.participanteEditing = {id: null};
+                $scope.$apply();
+            }
+        }
+    ]);
+
+    angular.module('Projects')
+    .controller('projects.secretarias', ['$scope','projectService','$stateParams',
+        function ($scope,projectService,$stateParams) {
+            $scope.setup = function()
+            {
+                $scope.secretariaSaved = false;
+                $scope.secretariaEditing = {cuilCuit: null};
+                $scope.secretariaEditingExisting = false;
+            };
+            $scope.agregarSecretaria = function(){
+
+                projectService.agregarSecretaria($stateParams.idConvocatory,$scope.projectEditing, $scope.secretariaEditing, onSecretariaUpdated);
+            };
+            $scope.eliminarSecretaria = function(secretaria){
+                projectService.eliminarSecretaria($stateParams.idConvocatory,$scope.projectEditing, secretaria);
+            };
+            $scope.editSecretaria = function(secretaria)
+            {
+                $scope.secretariaSaved = false;
+                $scope.secretariaEditing = angular.copy(secretaria);
+                $scope.secretariaEditingExisting = true;
+            };
+            var onSecretariaUpdated = function () {
+                $scope.secretariaSaved = true;
+                $scope.secretariaEditingExisting = false;
+                $scope.secretariaEditing = {id: null};
                 $scope.$apply();
             }
         }

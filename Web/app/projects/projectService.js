@@ -37,6 +37,18 @@ angular.module('Projects').factory('projectService', ['dataService',
                     return;
                 var referenceName =  'convocatories/' + convocatory + '/projects/' + project.id + '/participantes';
                 dataService.deleteObject(referenceName, participante);
+            },
+            agregarSecretaria: function (convocatory,project, secretaria, onProjectUpdated) {
+                if (secretaria.secretaria == null || convocatory == null)
+                    return;
+                var referenceName = 'convocatories/' + convocatory + '/projects/' + project.id + '/secretarias';
+                dataService.saveObject(referenceName, secretaria, onProjectUpdated);
+            },
+            eliminarSecretaria: function (convocatory,project, secretaria) {
+                if (convocatory == null || project.id == null)
+                    return;
+                var referenceName =  'convocatories/' + convocatory + '/projects/' + project.id + '/secretarias';
+                dataService.deleteObject(referenceName, secretaria);
             }
         };
     }

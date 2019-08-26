@@ -27,4 +27,9 @@
             <div ng-include src="'projects/participantes.html'"></div>
         </md-content>
     </md-tab>
+    <md-tab data-ng-if="projectEditing.id!=null" label="Secretarías/Departamentos">
+            <md-content class="md-padding">
+                <div ng-include src="'projects/secretarias.html'"></div>
+            </md-content>
+        </md-tab>
 </div>

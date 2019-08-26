@@ -15,25 +15,7 @@
             </div>
         </md-input-container>
         <md-input-container>
-            <label>Secretaria/Departamento</label>
-            <md-select ng-model="projectEditing.firstSecretaryshipDepartment" placeholder="Secretaría/Departamento">
-                <md-option><em>Ninguno</em></md-option>
-                <md-option value="{{secretaryshipDepartment.id}}" ng-repeat="secretaryshipDepartment in  parametrics['secretaryshipDepartment']">
-                    {{  secretaryshipDepartment.name }}
-                </md-option>
-            </md-select>
-        </md-input-container>
-        <md-input-container ng-show="interdepartamental">
-            <label>Secretaria/Departamento</label>
-            <md-select ng-model="projectEditing.secondSecretaryshipDepartment" placeholder="Secretaría/Departamento">
-                <md-option><em>Ninguno</em></md-option>
-                <md-option value="{{secretaryshipDepartment.id}}" ng-repeat="secretaryshipDepartment in  parametrics['secretaryshipDepartment']">
-                    {{  secretaryshipDepartment.name }}
-                </md-option>
-            </md-select>
-        </md-input-container>
-        <md-input-container>
-            <md-checkbox ng-model="interdepartamental" aria-label="Checkbox 1">
+            <md-checkbox ng-model="projectEditing.interdepartamental" aria-label="Checkbox 1">
                 Interdepartamental
             </md-checkbox>
         </md-input-container>
